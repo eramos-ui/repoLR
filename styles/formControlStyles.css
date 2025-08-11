@@ -1,0 +1,704 @@
+:root {
+  --input-background-color: #ffffff;
+  --input-text-color: #333333;
+  --input-border-color: #ccc;
+  --dropdown-background-color: #ffffff;
+  --dropdown-text-color: #333333;
+  --dropdown-hover-background-color: #f2f2f2;
+  --dropdown-hover-text-color: #333333;
+  --dropdown-selected-background-color:#d9d9d9;
+  --dropdown-selected-text-color: #333333;
+  --modal-title-color-light: #333333;
+  --modal-title-color-dark: #ffffff;
+}
+
+.theme-light {
+  --background-color: #ffffff;
+  --text-color: #333333;
+  --background-color: #ffffff;
+  --text-color: #333333;
+  --heading-color: #333333;
+  --input-background-color: #ffffff;
+  --input-text-color: #333333;
+  --input-border-color: #ccc;
+  --dropdown-background-color: #ffffff;
+  --dropdown-text-color: #333333;
+  --dropdown-border-color: #ccc;
+  --dropdown-hover-background-color: #f0f0f0;
+  --dropdown-hover-text-color: #000000;
+  --dropdown-selected-background-color: #d3d3d3;
+  --dropdown-selected-text-color: #000000;
+  --table-header-background-color: #f2f2f2;
+  --table-header-text-color: #333333;
+  --icon-button-color: #007bff;
+  --icon-button-hover-color: #0056b3;
+  --modal-title-color: var(--modal-title-color-light);
+}
+
+.theme-dark {
+  --background-color: #333333;
+  --text-color: #ffffff;
+  --heading-color: #ffffff;
+  --input-background-color: #444444;
+  --input-text-color: #ffffff;
+  --input-border-color: #555555;
+  --dropdown-background-color: #444444;
+  --dropdown-text-color: #ffffff;
+  --dropdown-border-color: #555555;
+  --dropdown-hover-background-color: #555555;
+  --dropdown-hover-text-color: #ffffff;
+  --dropdown-selected-background-color: #333333;
+  --dropdown-selected-text-color: #ffffff;
+  --table-header-background-color: #444444;
+  --icon-button-color: #80bdff;
+  --icon-button-hover-color: #339af0;
+  --modal-title-color: var(--modal-title-color-dark);
+}
+
+.read-only-input {
+  background-color: #f0f0f0; /* Color de fondo para indicar que es solo lectura */
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 4px;
+  width: 100%;
+  box-sizing: border-box;
+  color: #333;
+}
+.modal-title {
+  color: var(--modal-title-color);
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.modal-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-right: 10px;
+}
+
+.modal-save-button {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.modal-save-button:hover {
+  background-color: #0056b3;
+}
+
+.modal-cancel-button {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.modal-cancel-button:hover {
+  background-color: #b52a3b;
+}
+
+.field-label {
+  font-weight: bold;
+  color: #333; 
+  display: block;
+  margin-bottom: 5px;
+}
+
+.frame-title {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #007bff; /* Ajusta el color según tus preferencias */
+  margin-bottom: 10px;
+}
+
+.field-container {
+  margin-bottom: 10px;
+}
+
+button {
+  margin-top: 0px;
+  margin-bottom: 10px;
+  padding: 10px;
+  width: 100%;
+}
+
+span, .error-message {
+  color: red;
+}
+
+.has-error {
+  border: 1px solid red;
+}
+
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+  width: 100%; /* Asegura que la fila ocupe todo el ancho disponible */
+}
+
+.form-field {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.form-field input,
+.form-field select,
+.form-field textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.text-input,
+.select-input,
+.date-input,
+.textarea-input,
+.number-input,
+.radio-group-container,
+.rut-input,
+.checkbox-input {
+  padding: 10px;
+  border-radius: 4px;
+  box-sizing: border-box;
+  width: 100%;
+  margin-bottom: 10px;
+  border: 1px solid var(--input-border-color, #ccc);
+  background-color: var(--input-background-color, #ffffff);
+  color: var(--input-text-color, #333333);
+}
+
+.select-input {
+  appearance: none; 
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding-right: 30px;  
+  /* background: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="gray" class="bi bi-caret-down-fill" viewBox="0 0 16 16"><path d="M7.247 11.14 3.451 6.448c-.566-.72-.106-1.448.753-1.448h8.197c.858 0 1.318.728.753 1.447L8.752 11.14a1 1 0 0 1-1.505 0z"/></svg>') no-repeat right 10px center; */
+  background-color: var(--input-background-color, #ffffff);
+  background-size: 16px 16px;
+}
+
+/* Dropdown specific styles */
+.select-input option {
+  background-color: var(--dropdown-background-color, #ffffff);
+  color: var(--dropdown-text-color, #333333);
+}
+
+/* Checkbox and radio button styles */
+.checkbox-input,
+.radio-group-container input[type='radio'] {
+  width: auto;
+  margin-right: 10px;
+}
+
+.textarea-input {
+  height: auto; /* Permite que el textarea ajuste su altura */
+}
+
+.text-input::placeholder,
+.rut-input,
+.select-input::placeholder,
+.date-input::placeholder,
+.textarea-input::placeholder,
+.number-input::placeholder,
+.file-input {
+  color: #888;
+}
+
+.file-input {
+  height: auto; /* Permite que el file input ajuste su altura */
+}
+
+.select-input {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding-right: 30px;
+  background: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="gray" class="bi bi-caret-down-fill" viewBox="0 0 16 16"><path d="M7.247 11.14 3.451 6.448c-.566-.72-.106-1.448.753-1.448h8.197c.858 0 1.318.728.753 1.447L8.752 11.14a1 1 0 0 1-1.505 0z"/></svg>') no-repeat right 10px center;
+  background-size: 16px 16px;
+}
+
+/* General styles for form elements */
+/*
+.form-container {
+  background-color: var(--form-background-color, #ffffff);
+  color: var(--form-text-color, #333333);
+  font-family: var(--form-font-family, Arial, sans-serif);
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: var(--form-width, 100%);
+  max-width: var(--form-max-width, 900px);
+  margin-top: 100px; /* Ajusta según la altura del navbar *
+}
+
+.form-container h1,
+.form-container h2,
+.form-container h3 {
+  color: var(--form-heading-color, #333333);
+  font-family: inherit; /* Asegura que se utilice la misma fuente 
+}
+*/
+/*
+.form-container input,
+.form-container label,
+.form-container button {
+  font-family: inherit; 
+   color: inherit; 
+} 
+   */
+/*
+.form-container .button-group button {
+  font-family: inherit;
+  background-color: var(--button-background-color, #007bff);
+  color: var(--button-text-color, #ffffff);
+  padding: 10px 20px;
+  border-radius: 4px;
+  margin-right: 10px;
+}
+
+.form-container {
+  background-color: var(--background-color, #ffffff);
+  color: var(--text-color, #333333);
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: var(--form-width, 100%);
+  max-width: var(--form-max-width, 900px);
+}
+
+.form-container h1,
+.form-container h2,
+.form-container h3 {
+  color: var(--heading-color, #333333);
+} 
+*/
+/* Estilos para el tema claro */
+.theme-light {
+  --background-color: #ffffff;
+  --text-color: #333333;
+  --heading-color: #333333;
+  --input-background-color: #ffffff;
+  --input-text-color: #333333;
+  --input-border-color: #ccc;
+  --dropdown-background-color: #ffffff;
+  --dropdown-text-color: #333333;
+  --dropdown-border-color: #ccc;
+}
+
+/* Estilos para el tema oscuro */
+.theme-dark {
+  --background-color: #333333;
+  --text-color: #ffffff;
+  --heading-color: #ffffff;
+  --input-background-color: #444444;
+  --input-text-color: #ffffff;
+  --input-border-color: #555555;
+  --dropdown-background-color: #444444;
+  --dropdown-text-color: #ffffff;
+  --dropdown-border-color: #555555;
+}
+
+/* Detectar y respetar el modo oscuro del sistema solo si preferredTheme es windows */
+@media (prefers-color-scheme: dark) {
+  body:not([data-preferred-theme='form']) {
+    background-color: #333;
+    color: #fff;
+  }
+
+  body:not([data-preferred-theme='form']) .form-container {
+    background-color: #333;
+    color: #fff;
+  }
+
+  body:not([data-preferred-theme='form']) .text-input,
+  body:not([data-preferred-theme='form']) .select-input,
+  body:not([data-preferred-theme='form']) .date-input {
+    background-color: #333;
+    color: #fff;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  body:not([data-preferred-theme='form']) {
+    background-color: #fff;
+    color: #000;
+  }
+
+  body:not([data-preferred-theme='form']) .form-container {
+    background-color: #fff;
+    color: #000;
+  }
+
+  body:not([data-preferred-theme='form']) .text-input,
+  body:not([data-preferred-theme='form']) .select-input,
+  body:not([data-preferred-theme='form']) .date-input {
+    background-color: #fff;
+    color: #000;
+  }
+}
+
+.file-input-container {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.file-input-container label {
+  margin-bottom: 5px;
+}
+
+.file-input-container .file-input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.file-input-container .file-input::file-selector-button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.file-input-container .file-input::file-selector-button:hover {
+  background-color: #0056b3;
+}
+
+.radio-group-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.radio-group-container.horizontal {
+  flex-direction: row;
+}
+
+.radio-option {
+  margin-bottom: 5px;
+}
+
+.radio-group-container.horizontal .radio-option {
+  margin-right: 15px;
+}
+
+.radio-group-container input[type='radio'] {
+  margin-right: 5px;
+}
+
+.slider-container {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.slider-container label {
+  margin-bottom: 5px;
+}
+
+.slider-input {
+  width: 100%;
+}
+
+.slider-value {
+  margin-top: 5px;
+  text-align: right;
+}
+
+.range-input-container {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.range-input-container label {
+  margin-bottom: 5px;
+}
+
+.range-inputs {
+  display: flex;
+  justify-content: space-between;
+}
+
+.range-input {
+  width: 45%;
+}
+
+.range-values {
+  margin-top: 5px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.toggle-switch-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.toggle-switch-label {
+  margin-right: 10px;
+}
+
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.toggle-switch-input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-switch-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 34px;
+}
+
+.toggle-switch-slider:before {
+  position: absolute;
+  content: '';
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+.toggle-switch-input:checked + .toggle-switch-slider {
+  background-color: #007bff;
+}
+
+.toggle-switch-input:checked + .toggle-switch-slider:before {
+  transform: translateX(26px);
+}
+
+/* Estilos para la grilla */
+.grid-container {
+  width: var(--grid-width, 100%); /* Utiliza la variable CSS para el ancho de la grilla */
+}
+
+.grid-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.grid-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.grid-table th,
+.grid-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.grid-table th {
+  background-color: #f2f2f2;
+  color: var(--table-header-text-color, #333333);
+  padding: 10px;
+  text-align: left;
+  font-weight: bold;
+}
+
+.grid-row {
+  height: var(--row-height, 40px); /* Altura predeterminada si no se proporciona */
+}
+
+/* Estilo para el título de la grilla */
+.grid-title {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: var(--heading-color, #333333); /* Usa la variable de color del tema */
+}
+
+
+.icon-buttons {
+  display: flex;
+  gap: 5px;
+}
+
+.icon-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  /* color: #007bff; */
+  color: var(--icon-button-color, #007bff);
+  font-size: 16px; /* Ajusta el tamaño del ícono */
+}
+
+.icon-button:hover {
+  /* color: #0056b3; Cambia el color en hover */
+  color: var(--icon-button-hover-color, #0056b3);
+}
+
+.icon-button:focus {
+  outline: none;
+}
+
+/* Tooltip styles */
+/* [role='tooltip'] {
+  background-color: #333;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000; 
+  position: absolute;
+  top: 0; 
+  left: 0;
+} */
+
+/* styles.css */
+.custom-modal {
+  width: 50%; /* Ajusta el ancho del modal */
+  height: 60%; /* Ajusta la altura del modal */
+  margin: auto; /* Centra el modal */
+  padding: 20px; /* Espaciado interno */
+  border-radius: 10px; /* Bordes redondeados */
+}
+
+.error-message {
+  color: red;
+  font-size: 12px;
+}
+
+.error-container {
+  margin-top: 5px;
+}
+
+.field-frame {
+  border: 2px solid #ccc; /* Valor predeterminado, se puede sobrescribir */
+  border-radius: 4px;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.field-frame h3 {
+  margin-top: 0;
+}
+
+.field-frame-content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  width: 100%; /* Asegura que el contenido ocupe todo el ancho del contenedor */
+}
+
+.button-group {
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+/* MultiSelect specific styles */
+.multi-select-container {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.multi-select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid var(--input-border-color, #ccc);
+  border-radius: 4px;
+  background-color: var(--input-background-color, #ffffff);
+  color: var(--input-text-color, #333333);
+}
+
+.multi-select__menu {
+  background-color: var(--dropdown-background-color, #444444) !important;
+  color: var(--dropdown-text-color, #ffffff) !important;
+}
+
+.multi-select__option {
+  background-color: var(--dropdown-background-color, #444444) !important;
+  color: var(--dropdown-text-color, #ffffff) !important;
+}
+
+.multi-select__option--is-focused {
+  background-color: var(--dropdown-background-color-hover, #555555) !important;
+  color: var(--dropdown-text-color, #ffffff) !important;
+}
+
+.multi-select__option--is-selected {
+  background-color: var(--dropdown-background-color-selected, #666666) !important;
+  color: var(--dropdown-text-color-selected, #ffffff) !important;
+}
+/* Estilos para el input del Autocomplete */
+.autocomplete-select__control {
+  background-color: var(--input-background-color, #ffffff);
+  color: var(--input-text-color, #333333);
+  border: 1px solid var(--input-border-color, #ccc);
+}
+
+.autocomplete-select__menu {
+  background-color: var(--dropdown-background-color, #444444);
+  color: var(--dropdown-text-color, #ffffff);
+}
+
+.autocomplete-select__option {
+  background-color: var(--dropdown-background-color, #444444);
+  color: var(--dropdown-text-color, #ffffff);
+}
+
+.autocomplete-select__option:hover {
+  background-color: var(--dropdown-hover-background-color, #555555);
+  color: var(--dropdown-hover-text-color, #ffffff);
+}
+
+.autocomplete-select__option--is-focused {
+  background-color: var(--dropdown-focus-background-color, #666666);
+  color: var(--dropdown-focus-text-color, #ffffff);
+}
+
+.autocomplete-select__option--is-selected {
+  background-color: var(--dropdown-selected-background-color, #777777);
+  color: var(--dropdown-selected-text-color, #ffffff);
+}
+/* Estilos para el componente MyRUTInput */
+.rut-input-container {
+  margin-bottom: 15px;
+}
+
+.rut-input-container label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 5px;
+  color: var(--text-color, #333333);
+}
+
+/* .rut-input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid var(--input-border-color, #ccc);
+  border-radius: 4px;
+  background-color: var(--input-background-color, #ffffff);
+  color: var(--input-text-color, #333333);
+} */

@@ -1,0 +1,83 @@
+{
+    "general":
+     {
+         "botonGoToMenu": "Ir a página principal",
+         "tooltipBotonGotoMenu":"Advertencia: Esto te llevará a la página de inicio y perderás los cambios no guardados",
+         "loading":"Cargando...."
+     },
+    "navbar": 
+     {
+       "botonSalida": "Salida",
+       "menu": "Menú",
+       "appName":"Plataforma de Servicios EvoluSol"
+     },
+     "sin":{
+      "sinInvalid":"SIN inválido",
+      "sinToSmall":"SIN inválido. Debe tener 9 dígitos."
+   },
+      "rut":{
+      "rutInvalid":"Rut inválido",
+      "rutToSmall":"Rut inválido, debe tener al menos 6 dígitos." 
+   },
+     "grid":{
+      "buttonAdd":"Agregar ",
+      "tooltipsDelete":"Borrar ",
+      "tooltipsEdit": "Modificar ", 
+      "tooltipsZoom": "Abrir documento ", 
+      "errorMsgDuplicate":": el valor que has agregado para este campo ya está en la grilla, no se permiten duplicados."
+     }, "select":
+     {
+        "labelSelect":"Seleccione "
+     },
+     "login":
+     {
+        "title": "Login",
+        "emailPlaceholder":"Email",
+        "passwordPlaceholder":"Contraseña",
+        "botonLogin":"Ingresar con clave interna",
+        "labelOpcion":"o",
+        "botonGoogle":"Conectarse con Google",
+        "linkNewUser":"¿Eres un nuevo usuario?... Inscríbete aquí",
+        "linkForgotPass":"¿Has olvidado tu contraseña?"
+     },
+     "forgotPassword":
+     {
+        "title": "Recuperar contraseña",
+        "botonEnviar":"Enviar instrucciones",
+        "emailPlaceHolder":"Introduce tu email",
+        "messageEnviado":"Se ha enviado un correo electrónico con las instrucciones para restablecer tu contraseña.",
+        "mailSubject":"Restablecer contraseña",
+        "mailText":"Has solicitado restablecer tu contraseña. Haz clic en el siguiente enlace para restablecerla: ",
+        "mailHtml":"<p>Has solicitado restablecer tu contraseña. Haz clic en el siguiente enlace para restablecerla:</p>",
+        "messageSendMail":"Email sent",
+        "messageNotSendMail":"Error sending email:",
+        "messageErrorMailRequired":"Email is required"
+     },
+     "resetPassword":
+     {
+        "title":"Redefinir contraseña",
+        "namePlaceholder":"Nombre",
+        "Email":"Email",
+        "passwordPlaceholder":"Contraseña",
+        "passwordConfirmPlaceholder":"Confirmar Contraseña",
+        "botonResetPassword":"Actualizar Contraseña",
+        "messageFailedPassword":"Error al registrar el usuario:",
+        "messageTokenNoValid":"Token no válido o faltante",
+        "messageResetSuccess":"Contraseña restablecida con éxito",
+        "messageResetInvalid":"Hubo un error al restablecer la contraseña"
+     },
+     "registerNewUser":
+     {
+        "title":"Regístrate",
+        "namePlaceholder":"Nombre",
+        "EmailPlaceholder":"Email",
+        "passwordPlaceholder":"Contraseña",
+        "passwordConfirmPlaceholder":"Confirmar Contraseña",
+        "botonRegister":"Registrarse",
+        "urlToLogin":"Inicia sesión aquí",
+        "labelBotonRegister":"¿Ya tienes una cuenta?  ",
+        "messageSuccess":"Usuario registrado con éxito.",
+        "messageFailed":"Error al registrar el usuario:",
+        "messageFailedPassword":"Error al registrar el usuario:"
+     } 
+ }

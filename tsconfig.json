@@ -1,0 +1,49 @@
+{
+  "compilerOptions": {
+    "types": ["node", "validator", "hoist-non-react-statics"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "typeRoots": ["./node_modules/@types", "./types"],
+    // "forceConsistentCasingInFileNames": true,
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "experimentalDecorators": true,    
+    "emitDecoratorMetadata": true,
+    
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": [
+        "./*"
+      ]
+    },
+    "target": "ES2017"
+  },
+  "include": [
+    "types/**/*.d.ts",
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx", 
+    ".next/types/**/*.ts",
+    "lib/api.ts",
+    "scripts/**/*",
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

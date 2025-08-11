@@ -1,0 +1,17 @@
+.git
+.gitignore
+.vscode
+node_modules
+.env
+.env.local
+.next/cache
+.eslintrc*
+*.log
+tests
+coverage
+storybook
+*.md
+README.md
+Dockerfile
+*.bak
+*.zip

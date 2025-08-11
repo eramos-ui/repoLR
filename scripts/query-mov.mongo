@@ -1,0 +1,379 @@
+use GastosComunes;
+
+// Parámetros simulados
+const email = 'jonny.heiss@gmail.com';
+const fechaInicio = new Date('2025-06-01');
+const fechaFin = new Date('2025-07-01');
+const tipoFondo = 'NORMAL'; // o 'EMERGENCIA'
+const ingresoSalda = tipoFondo === 'NORMAL' ? 1000 : 1001;
+const claseMovimientoMap = {
+  GASTO_EMERGENCIA: [99],
+  GASTO_NORMAL: Array.from({ length: 98 }, (_, i) => i + 1), // 1 al 98
+  GASTO_TODOS: Array.from({ length: 99 }, (_, i) => i + 1),
+};
+const clasesGastoPermitidas = claseMovimientoMap['GASTO_NORMAL'];
+//printjson(clasesGastoPermitidas);
+const clasesGasto = db.claseMovimiento.find({ ingresoGasto: 'G', ingresoSalda}).map(c => ({
+  idClaseMovimiento: c.idClaseMovimiento,
+  descripcion: c.descripcion,
+  //ingresoSalda: c.ingresoSalda
+}));
+
+// Paso 1: obtener organización del usuario
+const usuario = db.user.aggregate([
+  { $match: { email ,vigente: true } }
+]).toArray()[0];
+
+const idOrganizacion = usuario.idOrganizacion;
+//printjson(idOrganizacion);
+const idOrganizacion =usuario.idOrganizacion;//organizacion.idOrganizacion;
+//const idOrganizacion = 1;
+const clasesIngresoPermitidas= tipoFondo === 'NORMAL' ? [1000] : [1001];
+
+//printjson(clasesIngresoPermitidas)
+
+// Paso 2: obtener clases de ingreso y gasto
+const clasesIngreso = db.claseMovimiento.find({ ingresoGasto: 'I', ingresoSalda, idOrganizacion }).map(c => c.idClaseMovimiento);
+const clasesGasto = db.claseMovimiento.find({ ingresoGasto: 'G', ingresoSalda, idOrganizacion }).map(c => ({
+  idClaseMovimiento: c.idClaseMovimiento,
+  descripcion: c.descripcion,
+  //ingresoSalda: c.ingresoSalda
+}));
+//printjson(clasesGasto);
+
+// Paso 3: obtener ingresos anteriores
+//const ingresosPrevios = db.cartera.aggregate
+
+//db.carteraIngreso.find().limit(2);
+const ingresosPrevios = db.carteraIngreso.aggregate([ 
+    {
+    //convierte fechaDocumento de string a Date
+        $addFields: {
+        fechaDate: { $toDate: "$fechaDocumento" }
+        }
+    },  
+    {
+        $match: {     
+        tipoDocumento: 'INGRESO',
+        entradaSalida: 'S',
+        claseMovimiento: { $in: clasesIngresoPermitidas },
+        fechaDate: { $lte: fechaInicio },
+        idCasa: { $gt: 0 } 
+        }
+    },
+   {
+    $lookup: {
+        from: "familia",
+        let: { idCasa: "$idCasa", mesPago: "$mesPago" },
+        pipeline: [
+        {
+            $match: {
+            $expr: {
+                $and: [
+                { $eq: ["$idCasa", "$$idCasa"] },
+                { $lte: ["$mesInicio", "$$mesPago"] },
+                { $gte: ["$mesTermino", "$$mesPago"] }
+                ]
+            }
+            }
+        }
+        ],
+        as: "familia"
+    }
+    },
+    { $unwind: "$familia" },
+    {
+        $lookup: {
+            from: "casa",
+            localField: "idCasa",
+            foreignField: "idCasa",
+            as: "casa"
+            }
+    },
+    { $unwind: "$casa" },   
+    {
+        $group: {
+            _id: {
+                fechaDocumento: "$fechaDocumento",
+                //mesPago: "$mesPago"
+            },
+            //comentario: { $first: { $concat: ["Casa ", { $toString: "$casa.codigoCasa" }, ", ", "$familia.familia"] } },
+            //mesPago: { $first: "$mesPago" },
+            ingreso: { $sum: "$monto" },
+            salida: { $sum: 0 }
+        }
+    },
+    {
+            $sort: { fechaDocumento: 1, comentario: 1  } 
+    },
+    //{ $limit: 10 }
+]).toArray();
+const saldoInicialIngreso = ingresosPrevios.reduce((acc, mov) => {
+  return acc + (mov.ingreso || 0);
+},  0 );
+
+//printjson(ingresosPrevios);
+//printjson(ingresosPrevios.length);
+
+// Paso 4: obtener gastos anteriores
+const gastosPrevios = db.carteraGasto.aggregate([
+    {
+        //convierte fechaDocumento de string a Date
+        $addFields: {
+        fechaDate: { $toDate: "$fechaDocumento" }
+        }
+    },  
+    {
+        $match: {
+        claseMovimiento:{ $in: clasesGastoPermitidas},
+        tipoDocumento: 'GASTO',
+        entradaSalida: 'E',
+        fechaDate: { $lt: fechaInicio }
+        }
+    },
+     {
+    $lookup: {
+      from: "docGasto",
+      let: { tipo: "$tipoDocumento", nro: "$nroDocumento" },
+      pipeline: [
+        {
+          $match: {
+            $expr: {
+              $and: [
+                { $eq: ["$tipoDocumento", "$$tipo"] },
+                { $eq: ["$nroDocumento", "$$nro"] }
+              ]
+            }
+          }
+        }
+      ],
+      as: "doc"
+    }
+  },
+  { $unwind: "$doc" },
+  {
+    $lookup: {
+        from: "claseMovimiento",
+        localField: "claseMovimiento",
+        foreignField: "idClaseMovimiento",
+        as: "clase"
+    }
+  },
+  { 
+    $unwind: {
+        path:"$clase", 
+        preserveNullAndEmptyArrays: true
+    }
+  },
+  {
+  $addFields: {
+    descripcion: {
+      $cond: [
+        { $in: ["$claseMovimiento", [98]] },
+        "$doc.comentario",
+        "$clase.descripcion"
+      ]
+    }
+  }
+  },
+  {
+    $group: {
+    _id: "$fechaDocumento",
+    comentario: { $first: "$descripcion" },
+    ingreso: { $sum: 0 },
+    salida: { $sum: "$monto" }
+    }
+  },
+  {
+    $sort: { _id: 1 } // ← Ordenar por fechaDocumento (que está en _id)
+  }
+]).toArray();
+
+//printjson(gastosPrevios);
+const saldoInicialGasto = gastosPrevios.reduce((acc, mov) => {
+ return acc + (mov.salida || 0);
+},   0 );
+
+//printjson(gastosPrevios);
+//printjson(gastosPrevios.length);
+//printjson(saldoInicialIngreso);
+//printjson(saldoInicialGasto);
+
+
+// los ingresos del periodo
+
+const ingresosPeriodo = db.carteraIngreso.aggregate([ 
+    {
+    //convierte fechaDocumento de string a Date
+        $addFields: {
+        fechaDate: { $toDate: "$fechaDocumento" }
+        }
+    },  
+    {
+        $match: {     
+        tipoDocumento: 'INGRESO',
+        entradaSalida: 'S',
+        claseMovimiento: { $in: clasesIngresoPermitidas },
+        fechaDate: { $gte: fechaInicio, $lte: fechaFin },
+        //fechaDate: { $lte: fechaInicio },
+        idCasa: { $gt: 0 } 
+      
+
+        }
+    },
+   {
+    $lookup: {
+        from: "familia",
+        let: { idCasa: "$idCasa", mesPago: "$mesPago" },
+        pipeline: [
+        {
+            $match: {
+            $expr: {
+                $and: [
+                { $eq: ["$idCasa", "$$idCasa"] },
+                { $lte: ["$mesInicio", "$$mesPago"] },
+                { $gte: ["$mesTermino", "$$mesPago"] }
+                ]
+            }
+            }
+        }
+        ],
+        as: "familia"
+    }
+    },
+    { $unwind: "$familia" },
+    {
+        $lookup: {
+            from: "casa",
+            localField: "idCasa",
+            foreignField: "idCasa",
+            as: "casa"
+            }
+    },
+    { $unwind: "$casa" },
+   
+    {
+        $group: {
+            _id: {
+                fechaDocumento: "$fechaDocumento",
+                idCasa:"$idCasa"
+                //mesPago: "$mesPago"
+            },
+            comentario: { $first: { $concat: ["Casa ", { $toString: "$casa.codigoCasa" }, ", ", "$familia.familia"] } },
+            //mesPago: { $first: "$mesPago" },
+            ingreso: { $sum: "$monto" },
+            salida: { $sum: 0 }
+        }
+    },
+    {
+            $sort: { _id: 1  } // ← Ordenar por fechaDocumento (que está en _id)
+    },
+    //{ $limit: 10 }
+]).toArray();
+//printjson(ingresosPeriodo);
+//print("Cantidad de ingresos periodo:", ingresosPeriodo.length);
+
+//los gastos del periodo
+const gastosPeriodo = db.carteraGasto.aggregate([
+    {
+        //convierte fechaDocumento de string a Date
+        $addFields: {
+        fechaDate: { $toDate: "$fechaDocumento" }
+        }
+    },  
+    {
+        $match: {
+        claseMovimiento:{ $in: clasesGastoPermitidas},
+        tipoDocumento: 'GASTO',
+        entradaSalida: 'E',
+        fechaDate: { $gte: fechaInicio, $lte: fechaFin },
+        }
+    },
+     {
+    $lookup: {
+      from: "docGasto",
+      let: { tipo: "$tipoDocumento", nro: "$nroDocumento" },
+      pipeline: [
+        {
+          $match: {
+            $expr: {
+              $and: [
+                { $eq: ["$tipoDocumento", "$$tipo"] },
+                { $eq: ["$nroDocumento", "$$nro"] }
+              ]
+            }
+          }
+        }
+      ],
+      as: "doc"
+    }
+  },
+  { $unwind: "$doc" },
+  {
+    $lookup: {
+        from: "claseMovimiento",
+        localField: "claseMovimiento",
+        foreignField: "idClaseMovimiento",
+        as: "clase"
+    }
+  },
+  { $unwind: "$clase" },
+  {
+  $addFields: {
+    descripcion: {
+      $cond: [
+        { $in: ["$claseMovimiento", [98]] },
+        "$doc.comentario",
+        "$clase.descripcion"
+      ]
+    }
+  }
+  },
+  {
+      $group: {
+        //_id: "$fechaDocumento",
+        _id: {
+                fechaDocumento: "$fechaDocumento",
+                comentario:"$descripcion"
+                //mesPago: "$mesPago"
+        },
+        comentario: { $first: "$descripcion" },
+        ingreso: { $sum: 0 },
+        salida: { $sum: "$monto" }
+        }
+  },
+  {
+    $sort: { _id: 1 } // ← Ordenar por fechaDocumento (que está en _id)
+  }
+]).toArray();
+
+//printjson(gastosPeriodo);
+//printjson(gastosPeriodo.length);
+
+const saldoInicial = saldoInicialIngreso - saldoInicialGasto;
+//printjson(saldoInicial);
+
+const filaInicial = {
+  _id: new Date(fechaInicio.getTime() - 86400000), // un día antes
+  comentario: "Saldo inicial",
+  ingreso: saldoInicialIngreso,
+  salida: saldoInicialGasto,
+  saldo: saldoInicial
+};
+//const movimientos = ingresosPeriodo.concat(gastosPeriodo).sort((a, b) => new Date(a._id) - new Date(b._id));
+const movimientos = ingresosPeriodo.concat(gastosPeriodo).sort(
+  (a, b) => new Date(a._id.fechaDocumento) - new Date(b._id.fechaDocumento)
+);
+//printjson(movimientos);
+//const movimientos = ingresosPeriodo.concat(gastosPeriodo).sort((a, b) => new Date(a.fechaDocumento) - new Date(b.fechaDocumento));
+const movimientosConSaldoInicial = [filaInicial, ...movimientos];
+let saldo = 0;
+const movimientosConSaldo = movimientosConSaldoInicial.map(mov => {
+  saldo += (mov.ingreso || 0) - (mov.salida || 0);
+  return {
+    ...mov,
+    saldo
+  };
+});
+//printjson(movimientosConSaldo);
+//printjson(movimientosConSaldo.length);

@@ -1,0 +1,139 @@
+{
+    "formTitle": "Perfilamiento de usuario",
+    "theme": "dark",
+    "globalStyles": {
+      "backgroundColor": "#333",
+      "color": "#fff",
+      "fontFamily": "Verdana, sans-serif"
+    },
+    "formSize": {
+      "width": "70%",
+      "maxWidth": "900px"
+    },
+    "buttons": [
+      {
+        "text": "Cancelar",
+        "action": "reset",
+        "backgroundColor": "#f44336",
+        "color": "#fff",
+        "padding": "10px 20px",
+        "borderRadius": "4px",
+        "marginRight": "10px"
+      },
+      {
+        "text": "Registrar",
+        "action": "submit",
+        "backgroundColor": "#4caf50",
+        "color": "#fff",
+        "padding": "10px 20px",
+        "borderRadius": "4px"
+      }
+    ],
+    "frames": [
+      {
+        "frameTitle": "Información Personal",
+        "frameStyle": {
+          "borderColor": "#4caf50",
+          "borderWidth": "2px",
+          "padding": "10px",
+          "marginBottom": "20px"
+        },
+        "fields": [
+          {
+            "type": "input",
+            "name": "firstName",
+            "label": "Nombre",
+            "placeholder": "Juan",
+            "value": "",
+            "width": "45%",
+            "row": 1,
+            "validations": [
+              {
+                "type": "required"
+              },
+              {
+                "type": "minLength",
+                "value": 3
+              }
+            ]
+          },
+          {
+            "type": "input",
+            "name": "lastName",
+            "label": "Apellido",
+            "placeholder": "Pérez",
+            "value": "",
+            "width": "45%",
+            "row": 1,
+            "validations": [
+              {
+                "type": "required"
+              }
+            ]
+          },
+          {
+            "type": "date",
+            "name": "birthDate",
+            "label": "Fecha de Nacimiento",
+            "placeholder": "01/01/2000",
+            "value": "",
+            "width": "30%",
+            "row": 2,
+            "format": "dd/MM/yyyy",
+            "validations": [
+              {
+                "type": "required"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "frameTitle": "Datos de Contacto",
+        "frameStyle": {
+          "borderColor": "#2196f3",
+          "borderWidth": "2px",
+          "padding": "10px",
+          "marginBottom": "20px"
+        },
+        "fields": [
+          {
+            "type": "email",
+            "name": "email",
+            "label": "Correo Electrónico",
+            "placeholder": "juan.perez@example.com",
+            "value": "",
+            "width": "60%",
+            "row": 1,
+            "validations": [
+              {
+                "type": "required"
+              },
+              {
+                "type": "email"
+              }
+            ]
+          },
+          {
+            "type": "input",
+            "name": "phoneNumber",
+            "label": "Número de Teléfono",
+            "placeholder": "123456789",
+            "value": "",
+            "width": "40%",
+            "row": 1,
+            "validations": [
+              {
+                "type": "required"
+              },
+              {
+                "type": "minLength",
+                "value": 9
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+  

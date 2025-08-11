@@ -1,0 +1,43 @@
+/* Estilos generales */
+.label {
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+/* Tamaños de fuente */ 
+.normal {
+  font-size: 14px;
+}
+.normal+ {
+  font-size: 16px;
+}
+.h1 {
+  font-size: 30px;
+}
+.h2 {
+  font-size: 25px;
+}
+.h3 {
+  font-size: 20px;
+}
+
+/* Colores de texto */
+.text-primary {
+  color: #3d5a80;
+}
+.text-secondary {
+  color: #98c1d9;
+}
+.text-tertiary {
+  color: #ee6c4d;
+}
+
+/* Tema claro */
+.label.light {
+  color: #333; /* Color de texto para tema claro */
+}
+
+/* Tema oscuro */
+.label.dark {
+  color: #ffffff; /* Color de texto para tema oscuro */
+  background-color: #333; /* Fondo opcional para el tema oscuro */
+}

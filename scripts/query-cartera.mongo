@@ -1,0 +1,90 @@
+//carteraIngreso
+use GastosComunes;
+
+// Parámetros simulados
+const year = 2025;
+const claseMovimiento = 'INGRESO_EMERGENCIA';
+const claseMovimientoMap = {
+  INGRESO_NORMAL: [1000],
+  INGRESO_EMERGENCIA: [1001],
+  INGRESO_TODOS: [1000,1001]
+};
+const clasesPermitidas = claseMovimientoMap[claseMovimiento];
+const entradaSalidaCond = claseMovimiento.startsWith('INGRESO') ? 'S' : 'E';
+const mesInicio = year * 100 + 1;
+const mesFin = year * 100 + 12;
+
+// Consulta de prueba: solo filtrado (equivalente a WHERE)
+db.carteraIngreso.aggregate([
+  {
+  // corresponde al where
+    $match: {
+      mesPago: { $gte: mesInicio, $lte: mesFin },
+      entradaSalida: entradaSalidaCond,
+      claseMovimiento: { $in: clasesPermitidas }
+    }
+  },
+  {
+    //corresponde a un inner join
+    $lookup: {
+        from: "casa", // nombre de la colección a unir (equivalente a la tabla 'casa')
+        localField: "idCasa", // campo en la colección actual (carteraIngreso)
+        foreignField: "idCasa", // campo en la colección 'casa'
+        as: "casaInfo" // nombre del nuevo campo donde se guardará el array resultante
+    }
+  },
+  { $unwind: "$casaInfo" },//Esto "extrae" el único elemento de ese array y lo deja como objeto plano. Si no hay coincidencia, unwind elimina el documento 
+  // un left joun sería: { $unwind: { path: "$casaInfo", preserveNullAndEmptyArrays: true } }
+  {
+    //otro join
+    $lookup: {
+      from: "familia",
+      let: { idCasa: "$idCasa", mesPago: "$mesPago" },
+      pipeline: [
+        {
+          $match: {
+            $expr: {
+              $and: [
+                { $eq: ["$idCasa", "$$idCasa"] },
+                { $lte: ["$mesInicio", "$$mesPago"] },
+                { $gte: ["$mesTermino", "$$mesPago"] }
+              ]
+            }
+          }
+        }
+      ],
+      as: "familiaInfo"
+    }
+  },
+  {
+    $unwind: {
+      path: "$familiaInfo",
+      preserveNullAndEmptyArrays: true // LEFT JOIN
+    }
+  },
+  {
+    $group: {
+      _id: {
+        idCasa: "$idCasa",
+        codigoCasa: "$casaInfo.codigoCasa",
+        familia: "$familiaInfo.familia",
+        mes: { $mod: ["$mesPago", 100] }
+      },
+      totalMonto: { $sum: "$monto" }
+    }
+  },
+  {
+    //esta da forma al resultado final
+    //Extrae valores desde _id: idCasa, codigoCasa, familia, mes que estaban dentro de _id, ahora se "suben" al nivel raíz del documento.
+    // se usa para: Cuando deseas excluir campos (por ejemplo, _id); renombrar campos; aplicar transformaciones (por ejemplo, con $ifNull, $concat, $add);
+    // Cuando tu $group o $lookup genera estructuras intermedias y se quiere limpiar el resultado
+    $project: {
+        idCasa: "$_id.idCasa",
+        codigoCasa: "$_id.codigoCasa",
+        familia: { $ifNull: ["$_id.familia", "Sin familia"] },//Asigna valor por defecto si familia es nulo
+        mes: "$_id.mes",
+        totalMonto: 1,
+        _id: 0
+    }
+  }
+]);

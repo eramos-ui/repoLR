@@ -1,0 +1,74 @@
+.dynamic-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.dynamic-form-row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap; /* ✅ Permite que los campos pasen a la siguiente línea si no caben */
+}
+
+.dynamic-form-field {
+  flex: 1; /* ✅ Hace que los campos se repartan el espacio disponible */
+  min-width: 200px; /* ✅ Evita que los campos sean demasiado pequeños */
+}
+
+.dynamic-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+/*.dynamic-form-field {
+  display: flex;
+  flex-direction: column; 
+  margin-bottom: 1rem;
+}
+
+.dynamic-form-field.left {
+  flex-direction: row; 
+  align-items: center;
+}
+
+.dynamic-form-field .dynamic-form-label {
+  margin-bottom: 0.5rem; 
+  font-weight: bold;
+}
+
+.dynamic-form-field.left .dynamic-form-label {
+  margin-right: 1rem; 
+  margin-bottom: 0; 
+}
+
+.dynamic-form-field .error-message {
+  color: red;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+.dynamic-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+*/
+/* .dynamic-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .dynamic-form-field {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+  }
+  
+  .dynamic-form-label {
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+  }
+  
+ */
+  

@@ -1,0 +1,90 @@
+
+
+/* Estilos generales */
+.cotizar-container {
+    max-width: 70%;
+    margin: 30px auto;
+    padding: 40px;
+    border-radius: 10px;
+    background: #f8f9fa;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Estilos para el encabezado */
+  .cotizar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  /* Alineación de bienvenida y botón */
+  .cotizar-welcome-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 80%; /* Ocupar todo el ancho */
+  }
+  .cotizar-welcome-container .custom-button {
+    margin-left: auto; /* Empuja el botón a la derecha */
+  }
+  /* ✅ Contenedor de las opciones y el botón de ayuda */
+  .cotizar-options-container {
+    display: flex;
+    justify-content: space-between; /* Separa el contenido */
+    align-items: center;
+    margin-top: 20px;
+    width: 80%;
+  }
+  /* ✅ Contenedor del anexo y el botón de selección de archivos */
+  .cotizar-file-container {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Espacio entre elementos */
+    width: 100%;
+  }
+  /* Estilos para los inputs */
+  .cotizar-input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  
+  /* Botones alineados */
+  .cotizar-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    width: 80%;
+  }
+  
+  /* Botón primario */
+  .button-primary {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .button-primary:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Botón secundario */
+  .button-secondary {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .button-secondary:hover {
+    background-color: #5a6268;
+  }
+  

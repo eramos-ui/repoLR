@@ -1,0 +1,188 @@
+{
+  "formTitle": "Formulaire pour mettre à jour le fichier de l’employé",
+  "theme": "dark",
+  "globalStyles": {
+    "backgroundColor": "#ffffff",
+    "color": "#333333",
+    "fontFamily": "Arial, sans-serif"
+  },
+  "formSize": {
+    "width": "100%",
+    "maxWidth": "1200px"
+  },
+  "buttons": [
+    {
+      "text": "Cancelar",
+      "action": "reset",
+      "backgroundColor": "#dc3545",
+      "color": "#fff",
+      "padding": "10px 20px",
+      "borderRadius": "4px"
+    },
+    {
+      "text": "Enviar",
+      "action": "submit",
+      "backgroundColor": "#007bff",
+      "color": "#fff",
+      "padding": "10px 20px",
+      "borderRadius": "4px"
+    }
+  ],
+  "fields": [
+    {
+      "type": "input",
+      "name": "rut",
+      "label": "Numéro d’assurance sociale",
+      "placeholder": "123456789",
+      "value": "",
+      "width": "100%",
+      "row": 1,
+      "validations": [
+        {
+          "type": "required"
+        }
+      ]
+    },
+    {
+      "type": "input",
+      "name": "firstName",
+      "label": "Entrez votre prénom",
+      "placeholder": "John",
+      "value": "",
+      "width": "100%",
+      "row": 1,
+      "className": "bg-gray-100 border border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 rounded-md p-2",
+      "style": { "backgroundColor": "#f9f9f9", "borderColor": "#ccc" },
+      "inputProps": { "minLength": 2, "maxLength": 30 },
+      "conditionalStyles": {
+        "value": { "borderColor": "red" }
+      },
+      "validations": [
+        {
+          "type": "required"
+        }
+      ]
+    },
+    {
+      "type": "input",
+      "name": "lastName",
+      "label": "Nom de famille",
+      "placeholder": "Doe",
+      "value": "",
+      "width": "100%",
+      "row": 1,
+      "validations": [
+        {
+          "type": "required"
+        }
+      ]
+    },
+    {
+      "type": "date",
+      "name": "birthDate",
+      "label": "Date de naissance",
+      "placeholder": "Select your birth date",
+      "value": "",
+      "width": "100%",
+      "row": 2,
+      "format": "dd/MM/yyyy",
+      "className": "w-full h-11 p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-700"
+    },
+    {
+      "type": "grid",
+      "name": "employeeGrid",
+      "label": "Employés",
+      "columns": [
+        { "name": "idRow", "visible": false,"typeColumn":"number"  },
+        { "name": "sin", "visible": true, "textAlign": "right","typeColumn":"sin" },
+        { "name": "Name", "visible": true, "textAlign": "left","typeColumn":"string"  },
+        { "name": "Place", "visible": true , "textAlign": "left","typeColumn":"string" },
+        { "name": "Salaire", "visible": true, "textAlign": "right","typeColumn":"money"  }
+      ],
+      "columnWidths": ["10%","20%","70%", "40%", "30%"],
+      "rowHeight": "30px",
+      "gridWidth": "100%",
+      "rows": [
+        { "idRow": 1,"sin":"684.216.476", "name": "John Doe", "place": "Developer", "salaire": 60000 },
+        { "idRow": 2,"sin":"635.216.476", "name": "Jane Smith", "place": "Designer", "salaire": 55000 }
+      ],
+      "actions": ["add", "edit", "delete"],
+      "width": "100%",
+      "row": 5,
+      "borderColor": "#007bff",
+      "borderWidth": "2px",
+      "padding": "10px",
+      "marginBottom": "20px",
+      "editFormConfig": {
+        "formTitle": "Employés",
+        "modalStyles": {
+          "content": {
+            "width": "70%",
+            "height": "60%",
+            "margin": "auto",
+            "padding": "20px",
+            "borderRadius": "10px"                
+          }
+        },
+        "fields": [
+          {
+            "type": "sin",
+            "name": "sin",
+            "label": "SIN",
+            "placeholder": "Entrez sin",
+            "value": "",
+            "width": "100%",
+            "row": 1,
+            "validations": [
+              {
+                "type": "required"
+              }
+            ]
+          },
+          {
+            "type": "input",
+            "name": "name",
+            "label": "Nom",
+            "placeholder": "Entrez name",
+            "value": "",
+            "width": "100%",
+            "row": 1,
+            "validations": [
+              {
+                "type": "required"
+              }
+            ]
+          },
+          {
+            "type": "input",
+            "name": "place",
+            "label": "Place",
+            "placeholder": "Entrez place",
+            "value": "",
+            "width": "100%",
+            "row": 2,
+            "validations": [
+              {
+                "type": "required"
+              }
+            ]
+          },
+          {
+            "type": "number",
+            "name": "salary",
+            "label": "Salary",
+            "placeholder": "Entrez salaire",
+            "value": 0,
+            "width": "100%",
+            "row": 3,
+            "validations": [
+              {
+                "type": "required"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

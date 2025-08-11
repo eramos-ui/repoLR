@@ -1,0 +1,160 @@
+/* Contenedor Principal */
+.custom-input-container {
+  margin: 1rem 0;
+  /* width: inherit;  */
+  display: flex;
+  /* flex-direction: column; */
+}
+
+/* Posición de Etiqueta */
+.custom-input-container.left {
+  display: flex;
+  align-items: center;
+}
+
+.custom-input-container.top {
+  display: block;
+}
+
+/* Etiqueta */
+.custom-input-label {
+  font-size: 14px;
+  margin-bottom: 4px;
+  display: block;
+} 
+
+.custom-input-label.top {
+  margin-bottom: 8px;
+}
+
+.custom-input-label.left {
+  margin-right: 8px;
+}
+
+/* Campo de Entrada */
+.custom-input-field {
+  /* flex: none; */
+  padding: 0.5rem; /* Padding sin ícono */
+  line-height: 1.5;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+  width: auto;
+  margin-top:0rem;
+  margin-bottom: 4px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+/* Efecto de Enfoque */
+.custom-input-field:focus {
+  border-color: #3182CE; /* Color al enfocar */
+}
+
+/* Wrapper para Posicionamiento de Íconos */
+/* .input-wrapper {
+  display: flex;
+  align-items: center;
+  height: auto; 
+} */
+
+/* Íconos */
+.icon {
+  position: absolute;
+  margin: 0 8px;
+}
+
+.left-icon {
+  left: 10px;
+}
+
+.right-icon {
+  right: 10px;
+}
+
+/* Padding Condicional para Íconos */
+.custom-input-field.has-left-icon {
+  padding-left: 32px;
+}
+
+.custom-input-field.has-right-icon {
+  padding-right: 32px;
+}
+
+/* Mensaje de Error */
+.error-message {
+  color: #E53E3E;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+/* Estilo para el Input con Error */
+.input-error {
+  border-color: #E53E3E;
+  background-color: #FFF5F5;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+/* Tema Claro */
+.custom-input-container.light .custom-input-field {
+  background-color: #ffffff;
+  color: #333;
+  border-color: #ddd;
+  width: auto;
+}
+
+.custom-input-container.light .error-message {
+  color: #ff4d4d;
+}
+
+/* Tema claro */
+.custom-input-container.light .custom-input-field::placeholder {
+  color: #a0aec0;
+}
+
+/* Tema oscuro */
+.custom-input-container.dark .custom-input-field::placeholder {
+  color: #e2e8f0;
+}
+
+
+/* Tema Oscuro */
+.custom-input-container.dark .custom-input-field {
+  background-color: #333;
+  color: #ffffff;
+  border-color: #666;
+  width: auto;
+}
+
+.custom-input-container.dark .error-message {
+  color: #ff7b7b;
+}
+/* input[type="file"]::-webkit-file-upload-button {
+  visibility: hidden;
+}
+input[type="file"]::before {
+  content: "Seleccionar archivo";
+  display: inline-block;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 5px 10px;
+  cursor: pointer;
+} */
+.custom-textarea {
+  resize: vertical; /* Permite ajustar el tamaño manualmente */
+  min-height: 60px; /* Altura mínima */
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 100%;
+}
+
+input[type="file"] {
+  color: transparent; /* Oculta el texto del archivo seleccionado */
+}
+
+input[type="file"]::file-selector-button {
+  color: black; /* Mantiene el color del botón */
+}

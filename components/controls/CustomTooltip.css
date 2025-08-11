@@ -1,0 +1,65 @@
+.custom-tooltip-container {
+  position: relative;
+  display: inline-block;
+}
+
+.custom-tooltip {
+  position: absolute;
+  z-index: 1000;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden; /* Ocultar visualmente el tooltip */
+  transform: scale(0.95);
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+}
+
+/* Estilos para temas */
+.custom-tooltip--light {
+  background-color: #fff;
+  color: #333;
+}
+
+.custom-tooltip--dark {
+  background-color: #333;
+  color: #fff;
+}
+
+/* Posiciones dinámicas */
+.custom-tooltip--top {
+  bottom: calc(100% + var(--tooltip-offset, 10px)); /* Offset dinámico */
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.custom-tooltip--bottom {
+  top: calc(100% + var(--tooltip-offset, 10px));
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.custom-tooltip--left {
+  right: calc(100% + var(--tooltip-offset, 10px));
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.custom-tooltip--right {
+  left: calc(100% + var(--tooltip-offset, 10px));
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Mostrar tooltip al activarse */
+.custom-tooltip-container:hover .custom-tooltip,
+.custom-tooltip-container:focus .custom-tooltip,
+.custom-tooltip-container:active .custom-tooltip {
+  opacity: 1;
+  visibility: visible; /* Asegura que sea visible */
+  transform: scale(1);
+}
+
+  

@@ -1,0 +1,307 @@
+{
+    "formTitle": "Fichas de usuario",
+    "theme": "light",
+    "globalStyles": {
+        "backgroundColor": "#ffffff",
+        "color": "#333333",
+        "fontFamily": "Arial, sans-serif"
+    },
+    "formSize": {
+        "width": "100%",
+        "maxWidth": "1200px"
+    },
+    "buttons": [{
+            "id": "cancel",
+            "text": "Volver al menú",
+            "action": "return",
+            "backgroundColor": "#007bff",
+            "color": "#fff",
+            "padding": "10px 20px",
+            "borderRadius": "4px"
+        }
+    ],
+    "table": {
+        "type": "grid",
+        "name": "tableGrid",
+        "label": "Usuarios",
+        "labelGridAdd": "Usuario",
+        "titleGrid": "Usuarios vigentes",
+        "spFetchRows": "LoadUsuario()",
+        "objectGrid": "usuario",
+        "columns": [{
+                "name": "id",
+                "label": "idRow",
+                "visible": false,
+                "typeColumn": "number"
+            }, {
+                "name": "name",
+                "label": "Nombre",
+                "visible": true,
+                "textAlign": "left",
+                "typeColumn": "string"
+            }, {
+                "name": "email",
+                "label": "Correo",
+                "visible": true,
+                "textAlign": "left",
+                "typeColumn": "string"
+            }, {
+                "name": "roleId",
+                "label": "idRole",
+                "visible": false,
+                "textAlign": "right",
+                "typeColumn": "number"
+            }, {
+                "name": "role",
+                "label": "Perfil",
+                "visible": true,
+                "textAlign": "left",
+                "dependentValue": {
+                    "field": "roleId",
+                    "value": "label"
+                },
+                "typeColumn": "string"
+            }, {
+                "name": "valid",
+                "label": "Vigente",
+                "visible": true,
+                "textAlign": "left",
+                "typeColumn": "string"
+            }, {
+                "name": "phone",
+                "label": "Celular",
+                "visible": true,
+                "textAlign": "left",
+                "typeColumn": "string"
+            }, {
+                "name": "rut",
+                "label": "RUT",
+                "visible": true,
+                "textAlign": "left",
+                "typeColumn": "string"
+            }, {
+                "name": "theme",
+                "label": "Fondo pantalla",
+                "visible": true,
+                "textAlign": "left",
+                "typeColumn": "string"
+            }
+        ],
+        "columnWidths": ["10%", "350px", "80%", "80%", "80%", "80%", "80%", "80%", "80%"],
+        "rowHeight": "30px",
+        "gridWidth": "100%",
+        "actions": ["add", "edit", "delete"],
+        "width": "100%",
+        "row": 5,
+        "borderColor": "#007bff",
+        "borderWidth": "2px",
+        "padding": "10px",
+        "marginBottom": "20px",
+        "spFetchSaveGrid": "updateUsuario",
+        "requirePassword": true,
+        "editFormConfig": {
+            "formTitle": "Ficha del usuario",
+            "formSize": {
+                "width": "100%",
+                "maxWidth": "1500px"
+            },
+            "modalStyles": {
+                "content": {
+                    "width": "80%",
+                    "height": "70%",
+                    "margin": "auto",
+                    "padding": "20px",
+                    "borderRadius": "10px"
+                }
+            }
+        }
+    },
+    "editFields": [{
+            "type": "input",
+            "name": "name",
+            "label": "Nombre (mín 10, máx 200 caracteres con nombre(s) y apellido(s))",
+            "visible": true,
+            "autoComplete": "off",
+            "placeholder": "Ingrese nombre del usuario ej. Felipe Rosas L.",
+            "value": "",
+            "width": "700px",
+            "row": 1,
+            "inputProps": {
+                "minLength": 10,
+                "maxLength": 200
+            },
+            "conditionalStyles": {
+                "value": {
+                    "borderColor": "red"
+                }
+            },
+            "validations": [{
+                    "type": "required",
+                    "message": "El nombre es obligatorio"
+                }, {
+                    "type": "minLength",
+                    "value": 3,
+                    "message": "Debe tener al menos 3 caracteres"
+                }
+            ]
+        }, {
+            "type": "number",
+            "name": "id",
+            "label": "id",
+            "visible": false,
+            "placeholder": "",
+            "value": "",
+            "width": "10%",
+            "row": 1
+        }, {
+            "type": "email",
+            "name": "email",
+            "label": "Email (mín 6, máx 100 caracteres)",
+            "visible": true,
+            "autoComplete": "off",
+            "placeholder": "Ingrese el email",
+            "value": "",
+            "width": "350px",
+            "row": 2,
+            "inputProps": {
+                "minLength": 6,
+                "maxLength": 100
+            },
+            "conditionalStyles": {
+                "value": {
+                    "borderColor": "red"
+                }
+            },
+            "validations": [{
+                    "type": "required",
+                    "message": "El email es obligatorio"
+                }, {
+                    "type": "email",
+                    "message": "Debe ser un email válido"
+                }
+            ]
+        }, {
+            "type": "input",
+            "name": "phone",
+            "label": "Celular(es)-separados por /",
+            "visible": true,
+            "autoComplete": "off",
+            "placeholder": "Ingrese su(s) celular(es)",
+            "value": "",
+            "width": "350px",
+            "row": 2,
+            "inputProps": {
+                "minLength": 6,
+                "maxLength": 100
+            }
+        }, {
+            "type": "RUT",
+            "name": "rut",
+            "label": "RUT",
+            "visible": true,
+            "autoComplete": "off",
+            "placeholder": "Ingrese su RUT",
+            "value": "",
+            "width": "300px",
+            "row": 2,
+            "inputProps": {
+                "minLength": 6,
+                "maxLength": 15
+            },
+            "conditionalStyles": {
+                "value": {
+                    "borderColor": "red"
+                }
+            },
+            "validations": [{
+                    "type": "required",
+                    "message": "El RUT es obligatorio"
+                }, {
+                    "type": "pattern",
+                    "value": "^\\d{1,2}\\.\\d{3}\\.\\d{3}-[\\dkK]$",
+                    "message": "Debe ser un RUT valido"
+                }
+            ]
+        }, {
+            "type": "select",
+            "name": "roleId",
+            "label": "Perfil",
+            "visible": true,
+            "autocomplete": "off",
+            "placeholder": "Defina perfil del usuario",
+            "value": "",
+            "width": "200px",
+            "row": 3,
+            "spFetchOptions": "getRoles",
+            "conditionalStyles": {
+                "value": {
+                    "borderColor": "red"
+                }
+            },
+            "validations": [{
+                    "type": "required",
+                    "message": "Debe seleccionar un perfil"
+                }, {
+                    "type": "valueGreaterThanZero",
+                    "message": "El valor debe ser mayor que 0"
+                }
+            ]
+        }, {
+            "type": "select",
+            "name": "valid",
+            "label": "Vigencia usuario",
+            "visible": true,
+            "autocomplete": "off",
+            "placeholder": "Defina vigencia del usuario",
+            "value": "",
+            "width": "300px",
+            "row": 3,
+            "conditionalStyles": {
+                "value": {
+                    "borderColor": "red"
+                }
+            },
+            "validations": [{
+                    "type": "required",
+                    "message": "Debe seleccionar una opción"
+                }
+            ],
+            "options": [{
+                    "value": "vigente",
+                    "label": "Vigente"
+                }, {
+                    "value": "no Vigente",
+                    "label": "No vigente"
+                }
+            ]
+        }, {
+            "type": "select",
+            "name": "theme",
+            "label": "Fondo de pantalla",
+            "visible": true,
+            "autocomplete": "off",
+            "placeholder": "Ingrese el tema que prefiere",
+            "value": "",
+            "width": "350px",
+            "row": 3,
+            "conditionalStyles": {
+                "value": {
+                    "borderColor": "red"
+                }
+            },
+            "validations": [{
+                    "type": "required",
+                    "message": "Debe seleccionar ua opción"
+                }
+            ],
+            "options": [{
+                    "value": "dark",
+                    "label": "oscuro"
+                }, {
+                    "value": "light",
+                    "label": "claro"
+                }
+            ]
+        }
+    ]
+}

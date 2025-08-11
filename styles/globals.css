@@ -1,0 +1,179 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+/* Personaliza el desenfoque */
+.blur-md {
+  filter: blur(5px);
+}
+/* Estilos para el dropdown */
+.absolute {
+  position: absolute;
+}
+
+.right-0 {
+  right: 0;
+}
+
+.mt-2 {
+  margin-top: 0.5rem;
+}
+
+.w-48 {
+  width: 12rem;
+}
+
+.bg-white {
+  background-color: white;
+}
+
+.rounded-md {
+  border-radius: 0.375rem;
+}
+
+.shadow-lg {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.py-2 {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.z-20 {
+  z-index: 20;
+}
+/* Estilos globales */
+/* body, html {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f4f4f4;
+} */
+/* Estilos para login y registro */
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* O 100% si quieres centrarlo dentro de un contenedor específico */
+  background-color: #f0f0f0; /* Fondo opcional */
+}
+.login-container {
+  max-width: 400px;
+  width: 100%; 
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff;
+
+}
+
+.login-tabs {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+}
+
+.login-tabs button {
+  background-color: #f1f1f1;
+  border: 1px solid #ddd;
+  padding: 10px;
+  cursor: pointer;
+  flex: 1;
+  text-align: center;
+}
+
+.login-tabs .active {
+  background-color: #007bff;
+  color: white;
+}
+
+.login-form, .register-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.login-form input, .register-form input {
+  margin-bottom: 10px;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+}
+
+.login-form button, .register-form button {
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.login-form button:hover, .register-form button:hover {
+  background-color: #0056b3;
+}
+
+.reset-password-container {
+  max-width: 400px;
+  margin: 100px auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.reset-password-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.reset-password-container input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.reset-password-container button {
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.reset-password-container button:hover {
+  background-color: #0056b3;
+}
+
+.reset-password-container .error-message {
+  color: #e74c3c;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.reset-password-container .success-message {
+  color: #2ecc71;
+  text-align: center;
+  margin-top: 10px;
+}

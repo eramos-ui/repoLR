@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+      "lib": ["esnext"],
+      "allowJs": true,
+      "esModuleInterop": true,
+      "module": "CommonJS",
+      "moduleResolution": "node",
+      "resolveJsonModule": true,
+      "isolatedModules": true,
+      "strict": true,
+      "noEmit": true,
+      "skipLibCheck": true
+    },
+    "include": ["scripts/**/*"],
+    "exclude": ["node_modules"]
+  }
+  

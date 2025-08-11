@@ -1,0 +1,44 @@
+{
+     "menus": [
+      {
+        "title": "Home",
+        "path": "/",
+        "icon": "faHome",
+        "subMenu": []
+      },
+      {
+        "title": "About",
+        "path": "/about",
+        "icon": "faInfoCircle",
+        "subMenu": [
+          {
+            "title": "Team",
+            "path": "/about/team",
+            "icon": "faUsers"
+          },
+          {
+            "title": "Company",
+            "path": "/about/company",
+            "icon": "faBuilding"
+          }
+        ]
+      },
+      {
+        "title": "Services",
+        "path": "/services",
+        "icon": "faCogs",
+        "subMenu": [
+          {
+            "title": "Web Development",
+            "path": "/services/web-development",
+            "icon": "faCogs"
+          },
+          {
+            "title": "Consulting",
+            "path": "/services/consulting",
+            "icon": "faCogs"
+          }
+        ]
+      }
+    ]
+  }
