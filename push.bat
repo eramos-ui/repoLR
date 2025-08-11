@@ -1,6 +1,6 @@
 @echo off
 :: Pide la descripción del commit
-set /p commitMessage=Ingrese la descripción del commit:
+set /p commitMessage=Ingrese la descripcion del commit:
 
 :: Mostrar lo que se hará
 echo.
