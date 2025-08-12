@@ -39,7 +39,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ThemeProvider>
           { isCotizarPage ? children : (// si es cotizar, no se renderiza el layout
             <PlacesProvider>
-              <MapProvider>
+              {/* <MapProvider> */}
                 <SidebarToggleProvider>
                   <SessionProvider>
                     <MenuProvider> 
@@ -47,7 +47,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     </MenuProvider>
                   </SessionProvider>
                 </SidebarToggleProvider>
-              </MapProvider>
+              {/* </MapProvider> */}
             </PlacesProvider>
           )}
         </ThemeProvider>

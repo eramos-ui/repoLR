@@ -184,11 +184,11 @@ export const EditForm: React.FC<EditFormProps> = ({
         return;
       } 
     const apiSaveForms=`/api${apiSaveForm}`;
-    const comentario=(values.descripcion)?values.descripcion:'';
+    // const comentario=(values.descripcion)?values.descripcion:'';
     const rowValues={...updateValues};
-    let body={row:rowValues,comentario, formId:formId,  idUserModification:session?.user.id, password};//siempre agrega el idUserModification
+    let body={row:rowValues, formId:formId,  idUserModification:session?.user.id, password};//siempre agrega el idUserModification
     
-    // console.log('body',body,row._id,apiSaveForms);
+    console.log('body',body,row._id,apiSaveForms);
 
      try {
       const response = await fetch(`${apiSaveForms}`, {

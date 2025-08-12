@@ -10,7 +10,7 @@ import { getUserVigenteByEmail } from '@/app/services/users/getUserVigenteByEmai
 
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  // console.log('en updateUsuario');
+  console.log('en updateUsuario');
   await connectDB();
 
   if (req.method !== 'POST') {
@@ -18,7 +18,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   const { action,idUserModification, row, password } = JSON.parse(req.body);//sólo vienen estos 4 datos
-    //console.log('en updateUsuario req.body',  action,idUserModification, row);
+    console.log('en updateUsuario req.body',  action,idUserModification, row);
     // return res.status(500).json({ message: 'probando update usuario' });
    if (action ==='delete') {//Marca usurio como No vigente
       const id=row._id;
