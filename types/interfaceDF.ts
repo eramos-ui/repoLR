@@ -50,7 +50,7 @@ export interface ButtonConfigDFType {
     objectGrid?:string;//para el tooltips de agregar y eliminar
     columns?: GridColumnDFType[];// Para el grid
     rows?: GridRowDFType[]; // Para el grid
-    actions?: ('add' | 'edit' | 'delete')[]; // Para el grid
+    actions?: ('add' | 'edit' | 'delete' |'zoom')[]; // Para el grid
     actionsTooltips?:{action:string,tooltips:string}[];//tooltips de actions en la grilla
     rowHeight?: string; // Altura de las filas
     columnWidths?: string[]; // Anchos de las columnas para el grid
