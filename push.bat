@@ -21,4 +21,3 @@ echo Haciendo push a GitHub...
 echo ------------------------------
 git push origin main
 
-pause
