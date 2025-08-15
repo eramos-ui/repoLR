@@ -7,7 +7,7 @@ import { ObjectId } from 'mongodb';
 import { getBucket  } from "@/lib/db";
 
 // Next no necesita parsear body en GET; lo desactivamos por si acaso
-export const config = { api: { bodyParser: false } };
+export const config = { api: { bodyParser: false,  responseLimit: false, } };
 
 function encodeRFC5987(str: string) {
   return encodeURIComponent(str)
@@ -16,14 +16,9 @@ function encodeRFC5987(str: string) {
     .replace(/%20/g, '+');
 }
 
-function shouldInline(contentType: string) {
-  return (
-    contentType.startsWith('image/') ||
-    contentType.startsWith('audio/') ||
-    contentType.startsWith('video/') ||
-    contentType === 'application/pdf'
-  );
-}
+function shouldInline(ct: string) {
+    return ct.startsWith('image/') || ct.startsWith('audio/') || ct.startsWith('video/') || ct === 'application/pdf';
+  }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'GET') {
@@ -52,23 +47,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // Si pasas ?download=1 en la URL, fuerza descarga
     const forceDownload = req.query.download === '1';
-    const dispType = !forceDownload && shouldInline(contentType) ? 'inline' : 'attachment';
+    const disp = !forceDownload && shouldInline(contentType) ? 'inline' : 'attachment';
 
     // Headers
     res.setHeader('Content-Type', contentType);
-    if (typeof length === 'number') {
-      res.setHeader('Content-Length', String(length));
-    }
-    res.setHeader(
-      'Content-Disposition',
-      `${dispType}; filename="${filename}"; filename*=UTF-8''${encodeRFC5987(filename)}`
-    );
-    // Ajusta tu estrategia de caché:
+    if (typeof length === 'number') res.setHeader('Content-Length', String(length));
+    res.setHeader('Content-Disposition', `${disp}; filename="${filename}"; filename*=UTF-8''${encodeRFC5987(filename)}`);
     res.setHeader('Cache-Control', 'public, max-age=86400, immutable');
 
     // Stream de descarga desde GridFS
     const stream = bucket.openDownloadStream(new ObjectId(id));
-
+    // Ajusta tu estrategia de caché:
     stream.on('error', (err) => {
       console.error('GridFS stream error:', err);
       // si ya se enviaron headers, solo finaliza la respuesta
