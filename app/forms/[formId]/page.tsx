@@ -47,14 +47,7 @@ import { EditForm } from '@/components/dynamicForm/EditForm';
   // useEffect(()=>{
   //    console.log('useEffect formData',formData?.editFields);
   // },[formData])
-  const replaceParam=((param:string) => { 
-    switch ( param ){
-    case 'userId':      
-      return session?.user.id
-    default:
-    return param;   
-    }
-  })
+
   const reLoad=() =>{//al cerrar el modal carga la pagina de nuevo
     window.location.reload();
   }
@@ -66,15 +59,15 @@ import { EditForm } from '@/components/dynamicForm/EditForm';
         return;
       }  
       let data:FormConfigDFType;
-      try {
-        // console.log('lee form y filas',`/api/forms/${formId}`);
+      try { 
+        console.log('lee form apiGetForm',`/api/forms/${formId}`);
         const res = await fetch(`/api/forms/${formId}`);//los datos del submenu { buttons, fields,formn} 
         // console.log('en [formId] res',res);
         if (!res.ok) {
           throw new Error(`Failed to fetch form data: ${res.statusText}`);
         }
         data= await res.json();
-        // console.log('en [formId] jsonForm',data); 
+        console.log('en [formId] jsonForm',data); 
      
         setInitialValues({items:data.rows});//debe llevar el nombre para el initialValues
         setFormData( data );//Devuelve el campo jsonForm de la tabla Form
@@ -93,11 +86,21 @@ import { EditForm } from '@/components/dynamicForm/EditForm';
     setLoading(false); 
   }, [formId]);
   useEffect(() => {
+    const replaceParam=((param:string) => { 
+      switch ( param ){
+      case 'userId':      
+        return session?.user.id
+      default:
+      return param;   
+      }
+    })
     const fetchData = async (apiGetRows:string) => {//
+      let api='/api'+(apiGetRows.substring(0,1) === '/' ? apiGetRows : '/'+apiGetRows);
       try{
-        const res = await fetch(`/api/${apiGetRows}`);
+        // console.log('en [formId] apiGetRows',api)
+        const res = await fetch(api);
         const data = await res.json();
-          // console.log('rows',data,apiGetRows)
+          //  console.log('rows',data)
         setRows(data);
       } catch (err) {
         if (err instanceof Error) {
@@ -111,6 +114,10 @@ import { EditForm } from '@/components/dynamicForm/EditForm';
     }
     setLoading(true);
     let apiGetRows=formData?.table.apiGetRows;
+    if (!apiGetRows || apiGetRows.length === 0){ 
+      console.log('en [formId] apiGetRows no definido');
+      return;
+    };
     // console.log('apiGetRows de la BD',apiGetRows)
     if(apiGetRows?.includes('[')) { //la url tiene parámetro
       const urlInicio=apiGetRows.split('[')[0];
@@ -123,13 +130,21 @@ import { EditForm } from '@/components/dynamicForm/EditForm';
       fetchData(apiGetRows);
       setLoading(false);
     }
-  }, [formData]);
+  }, [formData, session]);
   if (formId === 0) {
     return <div>No valid subMenuId provided</div>;
   }
   if (!formData || loading ) {
     return <LoadingIndicator  message='cargando' />;    
   }
+  const replaceParam=((param:string) => { //para el que está en handleDelete
+    switch ( param ){
+    case 'userId':      
+      return session?.user.id
+    default:
+    return param;   
+    }
+  })
   const handleDelete = async (index: number) => {
     const apiSaveForm=formData?.table.apiSaveForm;  
     const apiDeleteForm=formData?.table.apiDeleteForm; //case en que el delete no es un versión del documento, sin su eliminación. Es el case Evento, no el de Usuario    

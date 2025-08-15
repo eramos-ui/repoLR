@@ -5,7 +5,7 @@ Server component que no usa "use client"
 */
 import { notFound } from "next/navigation";
 import { getBucket, connectDB  } from "@/lib/db";
-// import { FileMeta } from '@/models/FileMeta';
+import Image from 'next/image';
 import { ObjectId } from "mongodb";
 import GoBackButton from '@/components/general/GoBackButton'; // ajusta el path según tu estructura
 
@@ -40,11 +40,20 @@ export default async function FileViewer({ params }: { params: { gridFsId: strin
         <GoBackButton />
         <h2 className="text-xl font-semibold mb-4">{file.filename}</h2>
           {isImage && (
-          <img
-            src={downloadUrl}
-            alt={file.filename}
-            className="max-w-full h-auto border shadow"
+          // <img
+          //   src={downloadUrl}
+          //   alt={file.filename}
+          //   className="max-w-full h-auto border shadow"
+          // />
+          <div className="relative w-full max-w-xl aspect-[4/3] border shadow">
+            <Image
+              src={downloadUrl}
+              alt={file.filename}
+              fill
+              className="object-contain"
+              sizes="(max-width: 768px) 100vw, 50vw"
           />
+          </div>
           )}
         {isPDF && (
           <iframe

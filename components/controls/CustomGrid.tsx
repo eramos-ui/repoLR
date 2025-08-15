@@ -101,7 +101,7 @@ export const CustomGrid = <T,>({
       }
       return newData
   
-    }, [rows, sortConfig]);
+    }, [rows, sortConfig, ocultarValoresRepetidos]);
     useEffect(()=>{
       // console.log('en useEffect de CustomGrid',rows)
       if (rows && rows.length>0 && ocultarValoresRepetidos ){
@@ -115,7 +115,7 @@ export const CustomGrid = <T,>({
         // setRows(rowSorted);
         setRows(processedData);
         }
-    },[data])
+    },[data, ocultarValoresRepetidos, sortedData])
     const columnsToRender = useMemo(
       () =>
         columns.filter(c => {

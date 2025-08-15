@@ -4,8 +4,7 @@ export * from './types';
 export * from './findNextActivities';
 export * from './resolveCuestion';
 export * from './canCreateJoinTask';
-export * from './processNextActivities';
-export * from './finishTask';
+
 export * from './getDiagramByIdProcess';
 export * from './getCompletedTaskKeys';
 export * from './getContextByTask';

@@ -68,6 +68,7 @@ export interface ButtonConfigDFType {
     spFetchSaveGrid?:string;
     apiSaveForm?:string;
     apiDeleteForm?:string;
+    apiUploadFile?:string;
     requirePassword?:boolean; 
     padding?:string;
     marginBottom?:string;

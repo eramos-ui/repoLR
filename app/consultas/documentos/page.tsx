@@ -45,29 +45,19 @@ const ConsultaRepositorioPage = () => {
       }
       fetchData();
     }, []);
-    const fetchRows = async () => {
-      setLoading(true);
-     
-      // let movs:any[]=[];
-      // const informe='INGRESO';//sólo ingresos
-      // const familiaFull=familiasFull.find( fa => fa.value === Number(familia));
-      // const idCasa=familiaFull?.idCasa || 0;
-      const response = await fetch(`/api/files/getAprobados/?idTema=${temaSelected}`);//?fechaInicio=${fechaInicioFormatted}&fechaFin=${fechaFinFormatted}&tipoFondo=${informe}&email=${email}&idCasa=${idCasa}
-      const data = await response.json();
-      // console.log('rows',data);
-     
-      // // console.log('en Movimiento por casa perido',movimientosConSaldo)
-      setRows(data.items);
-      // setLoading(false);
-      // setIsModalOpen(true);
-      setLoading(false);
-  }
     useEffect(() =>{
+      const fetchRows = async () => {
+        setLoading(true);     
+        const response = await fetch(`/api/files/getAprobados/?idTema=${temaSelected}`);//?fechaInicio=${fechaInicioFormatted}&fechaFin=${fechaFinFormatted}&tipoFondo=${informe}&email=${email}&idCasa=${idCasa}
+        const data = await response.json();
+        // console.log('rows',data);
+        setRows(data.items);
+        setLoading(false);
+      }
       if (temaSelected && temaSelected >= 0){
           // console.log('en useEffect temaSelected',temaSelected)
           fetchRows();
       }
-
     },[temaSelected])
     const handleOnZoom=( row:any)=>{
       const idFileMeta=row.gridFsId;

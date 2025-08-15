@@ -31,7 +31,7 @@ export default function HomePage() {
       // console.log('HomePage cards',cards);
     };
     fetchCards();
-  }, []);
+  }, [session]);
   const handleClick = (path?: string) => {
     if (path) {
       router.push(path);

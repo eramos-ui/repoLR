@@ -25,7 +25,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.setHeader('Allow', ['GET']);
     return res.status(405).end('Method Not Allowed');
   }
-// console.log('req.query.userId',req.query.userId)
+//  console.log('en files req.query.userId',req.query.userId)
   try {
     const userId = cleanId(req.query.userId);
     if (!ObjectId.isValid(userId)) {

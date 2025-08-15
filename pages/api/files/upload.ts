@@ -1,11 +1,57 @@
 // /pages/api/files/upload.ts (ejemplo con Next.js Pages API)
-
+/*
+NO SE USA
+*/
 import type { NextApiRequest, NextApiResponse } from 'next';
 import multer from 'multer';
+import formidable, { File as FormidableFile } from 'formidable';
 import { connectDB, getBucket  } from '@/lib/db';
 import { FileMeta } from '@/models/FileMeta';
 
-export const config = { api: { bodyParser: false } }; // necesario para multer
+export const config = { api: { bodyParser: {  sizeLimit: '20mb', // ajusta el límite si enviarás archivos grandes en base64
+  },} 
+}; // imprescindible con form-data
+type IncomingRow = {
+  file?: any;             // puede venir {} cuando no hay archivo
+  tema?: (string | number)[];
+  fuente?: string | number;
+  authorName?: string;
+  linkDocument?: string;
+};
+type IncomingBody = {
+  row?: IncomingRow;
+  formId?: number | string;
+  idUserModification?: string;
+  password?: string;
+};
+function toNumber(v: unknown): number | undefined {
+  if (v === null || v === undefined || v === '') return undefined;
+  const n = Number(v);
+  return Number.isFinite(n) ? n : undefined;
+}
+
+function toNumberArray(v: unknown): number[] {
+  const arr = Array.isArray(v) ? v : v != null ? [v] : [];
+  return arr.map(x => Number(x)).filter(n => Number.isFinite(n));
+}
+
+function isEmptyObject(obj: any) {
+  return obj && typeof obj === 'object' && !Array.isArray(obj) && Object.keys(obj).length === 0;
+}
+
+
+
+function extractBase64(raw: string): string {
+  // admite "data:mime;base64,xxxxx" o "xxxxx" directo
+  const i = raw.indexOf('base64,');
+  return i >= 0 ? raw.slice(i + 'base64,'.length) : raw;
+}
+function safeParse(s: string) {
+  try { return JSON.parse(s); } catch { return null; }
+}
+
+/*
+
 // Multer en memoria
 const upload = multer({
     storage: multer.memoryStorage(),
@@ -62,13 +108,34 @@ function runMiddleware<T = any>(req: NextApiRequest, res: NextApiResponse, fn: F
     // si tus IDs son numéricos: return normalizeLimited(raw.map(n => Number(n)), 5);
     return normalizeLimited(raw.map(String), 5); // strings/ObjectId
   }
-
+*/
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== 'POST') {
-    res.setHeader('Allow', ['POST']);
-    return res.status(405).end('Method Not Allowed');
-  }
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+  const raw = typeof req.body === 'string' ? safeParse(req.body) : req.body;// ⚠️ Normaliza: soporta body string o objeto ya parseado
+  
+  if (!raw) return res.status(400).json({ error: 'Body JSON inválido' });
+  console.log('raw',raw);
+  const { row, formId, idUserModification, password } = raw as {
+    row?: any; formId?: number | string; idUserModification?: string; password?: string;
+  };
+  console.log('row',row) 
+  // const body = req.body as IncomingBody;
+  // console.log('body',body)
+  // console.log('body[row]',body['row'])
 
+
+  // const { row, formId, idUserModification, password } = raw as {
+  //   row?: any; formId?: number | string; idUserModification?: string; password?: string;
+  // };
+
+  // if (!row) return res.status(400).json({ error: 'Falta "row" en el body.' });
+  // const { row } = body;
+
+//  const { action,idUserModification, row, password } = JSON.parse(req.body);//sólo vienen estos 4 datos
+//  console.log ('req.body',req.body,req.method);
+
+ return res.status(400).json( 'probando api' );
+/*
   try {
     await runMiddleware(req, res, upload.single('file'));
     await connectDB();
@@ -166,5 +233,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         console.error('Error en upload:', e);
         return res.status(500).json({ error: e.message });
     }
-
+*/
 }
