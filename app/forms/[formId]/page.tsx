@@ -25,6 +25,7 @@ import _ from "lodash";
 import GridContainer from '@/components/dynamicForm/GridContainer';
 import { EditForm } from '@/components/dynamicForm/EditForm';
 
+// const uri = process.env.NEXTAUTH_URL || "localhost:3000";
 // const FormPage = ({ params }: { params: { subMenuId: string } }) => {
   const FormPage = ( ) => {
   const params                                  = useParams();
@@ -97,10 +98,10 @@ import { EditForm } from '@/components/dynamicForm/EditForm';
     const fetchData = async (apiGetRows:string) => {//
       let api='/api'+(apiGetRows.substring(0,1) === '/' ? apiGetRows : '/'+apiGetRows);
       try{
-        // console.log('en [formId] apiGetRows',api)
+         console.log('en [formId] apiGetRows',api)
         const res = await fetch(api);
         const data = await res.json();
-          //  console.log('rows',data)
+          console.log('rows',data)
         setRows(data);
       } catch (err) {
         if (err instanceof Error) {
@@ -248,7 +249,11 @@ import { EditForm } from '@/components/dynamicForm/EditForm';
       const inicio=ruta.split('[')[1];
       const param=inicio.split(']')[0];      
       const valueParam=row[param];
+      console.log('row',row);
+      console.log('ruta ini, param, valueParam',ruta,param,valueParam);
       ruta=urlInicio+replaceParam(valueParam)+inicio.split(']')[1];
+      //  ruta=uri+'/api/files/689f4b4ef266124a4b8bfaf6'
+      console.log('ruta final', `${ruta}`);
     }
     router.push(`${ruta}`);
   }
