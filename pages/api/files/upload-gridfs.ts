@@ -5,128 +5,161 @@ import { Readable } from 'stream';
 import { finished } from 'stream/promises';
 import crypto from 'crypto';
 import { Types } from 'mongoose';
-import { connectDB, getBucket  } from '@/lib/db';
+import { getBucket } from '@/lib/db';
 import { FileMeta } from '@/models/FileMeta';
 import { normalizeOriginalName } from '@/utils/filename';
 
 export const config = {
-  api: { bodyParser: false }, // imprescindible para manejar multipart/form-data con multer
+  api: { bodyParser: false },
 };
 
-// ---- Multer: memoria (buffer en RAM) ----
-const upload = multer({
-  storage: multer.memoryStorage(),
-  // limits: { fileSize: 20 * 1024 * 1024 }, // opcional: 20MB
-});
+const upload = multer({ storage: multer.memoryStorage() });
+const DEDUPE_MODE = (process.env.DEDUPE_MODE || 'strict') as 'strict' | 'link';
 
-// Helper para usar middlewares estilo Express en Next
-function runMiddleware<T = any>(req: NextApiRequest, res: NextApiResponse, fn: any): Promise<T> {
-  return new Promise((resolve, reject) => {
-    fn(req as any, res as any, (result: any) => {
-      if (result instanceof Error) return reject(result);
-      return resolve(result);
-    });
-  });
+function runMw(req: any, res: any, fn: any) {
+  return new Promise((resolve, reject) => fn(req, res, (r: any) => (r instanceof Error ? reject(r) : resolve(r))));
 }
-// Utils de normalización ------------------------------------------------------
+
 function toNumber(v: any): number | undefined {
-    const n = Number(v);
-    return Number.isFinite(n) ? n : undefined;
-  }
-  function toNumberArray(v: any): number[] {
-    if (Array.isArray(v)) return v.map(Number).filter(Number.isFinite);
-    if (v === undefined || v === null || v === '') return [];
-    return [Number(v)].filter(Number.isFinite);
-  }
-  function toStringArray(v: any): string[] {
-    if (Array.isArray(v)) return v.map((s) => String(s)).filter(Boolean);
-    if (v === undefined || v === null || v === '') return [];
-    return [String(v)];
-  }
-  function pickKind(mime: string): 'pdf' | 'image' | 'other' {
-    if (!mime) return 'other';
-    if (mime === 'application/pdf') return 'pdf';
-    if (mime.startsWith('image/')) return 'image';
-    return 'other';
-  }
-  function isObjectIdString(s: any): s is string {
-    return typeof s === 'string' && /^[a-f\d]{24}$/i.test(s);
-  }
+  const n = Number(v);
+  return Number.isFinite(n) ? n : undefined;
+}
+function toNumberArray(v: any): number[] {
+  if (Array.isArray(v)) return v.map(Number).filter(Number.isFinite);
+  if (v === undefined || v === null || v === '') return [];
+  return [Number(v)].filter(Number.isFinite);
+}
+function pickKind(mime: string): 'pdf' | 'image' | 'other' {
+  if (!mime) return 'other';
+  if (mime === 'application/pdf') return 'pdf';
+  if (mime.startsWith('image/')) return 'image';
+  return 'other';
+}
+function isHexId(s: any): s is string {
+  return typeof s === 'string' && /^[a-f\d]{24}$/i.test(s);
+}
+
+type FMLean = {
+  _id: Types.ObjectId;
+  gridFsId: Types.ObjectId;
+  filename: string;
+  mimeType: string;
+  size: number;
+  sha256?: string;
+  kind: 'pdf' | 'image' | 'other';
+};
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
-// console.log('en upload-gridfs')
-try {
-    // 1) Parsear multipart con multer (aceptamos cualquier campo de archivo)
-    await runMiddleware(req, res, upload.any());
- 
 
-    // Ahora tienes:
-    // (req as any).files  -> archivos (array)
-    // (req as any).body   -> campos de texto
+  try {
+    await runMw(req as any, res as any, upload.any());
 
     const files: Express.Multer.File[] = ((req as any).files as Express.Multer.File[]) || [];
     const fields = (req as any).body || {};
-    
-    // Ejemplo de campos "lógicos" que mencionaste:
-    // - row.fuente (number), row.temasId (array numérica), etc.
-    // Aquí solo los leemos si vinieran planos:
-    // 2) Leer/normalizar campos que quieres guardar en metadata
-    //const formId = toNumber(fields.formId); // opcional si te sirve para armar filename
-    // const idUserModification = fields.idUserModification; // quien sube (uploadedBy)
-    
-    const row=JSON.parse(fields.row);
-    const idUserModification = fields.idUserModification; // quien sube (uploadedBy)
-    const authorId = (row.authorId)?row.authorId:idUserModification; // opcional: autor del documento
-    const authorName = typeof row.authorName === 'string' ? row.authorName.trim() : '';
-    const uploadedBy = idUserModification;//typeof fields.uploadedBy === 'string' ? fields.uploadedBy.trim() : '';
-    const fuente = toNumber(row.fuente);
-    const temaIds=row.tema;             // number
 
-    const linkDocument= (row['linkDocument'])? row['linkDocument'] : undefined; 
-    // console.log('tema',temaIds)
-    // console.log('row',row,typeof row)
-    // console.log('fields',fields)
-    // console.log('uploadedBy',uploadedBy);
-    // return res.status(401).json('Probando upload' );
-
-
-    // 2) Validaciones mínimas
     if (!files.length) return res.status(400).json({ error: 'No se adjuntaron archivos.' });
 
-    if (!idUserModification) return res.status(400).json({ error: 'idUserModification es requerido.' });
-    // if (!Number.isFinite(formId)) return res.status(400).json({ error: 'formId debe ser numérico.' });
+    // row como JSON seguro
+    let row: any = {};
+    try {
+      row = fields.row ? JSON.parse(fields.row) : {};
+    } catch {
+      return res.status(400).json({ error: 'row no es JSON válido' });
+    }
 
-    // 3) Subir a GridFS
+    // uploadedBy / authorId
+    const idUserModification = String(fields.idUserModification || '');
+    if (!isHexId(idUserModification)) {
+      return res.status(400).json({ error: 'idUserModification debe ser un ObjectId válido.' });
+    }
+    const uploadedBy = new Types.ObjectId(idUserModification);
+
+    const authorId =
+      isHexId(row.authorId) ? new Types.ObjectId(row.authorId) : uploadedBy;
+    const authorName = typeof row.authorName === 'string' ? row.authorName.trim() : '';
+
+    // otros campos opcionales
+    const fuente = toNumber(row.fuente);
+    const temaIds = toNumberArray(row.tema);
+    const linkDocument = typeof row.linkDocument === 'string' && row.linkDocument.trim() ? row.linkDocument.trim() : undefined;
+
     const bucket = getBucket();
 
-    const created: any[] = []
+    // acumuladores de resultado
+    const created: any[] = [];
+    const duplicates: any[] = [];
+
     for (const f of files) {
-        
-        const originalFixed = normalizeOriginalName(f.originalname); // Corrige tildes/ñ y limpia
-        // 3.1 sha256 (desde buffer de multer)
-        const sha256 = crypto.createHash('sha256').update(f.buffer).digest('hex');
-  
-        // 3.2 filename lógico dentro del bucket
-        // const filename =`${formId ?? 'noform'}/${idUserModification}/${Date.now()}-${f.originalname}`;
-        const filename=`${idUserModification}/${originalFixed}`;
-        
-        // 3.3 subir a GridFS
-        const readStream = Readable.from(f.buffer);
-        const uploadStream = bucket.openUploadStream(filename, {
-          contentType: f.mimetype,
-          metadata: {
-            fieldname: f.fieldname,
-            originalName: f.originalname,
-            uploadedBy: uploadedBy,
-            // formId: formId ?? null,
-          },
-        });
+      const originalFixed = normalizeOriginalName(f.originalname);
+      const sha256 = crypto.createHash('sha256').update(f.buffer).digest('hex');
+
+      // 1) Dedupe pre-subida
+      const existing = await FileMeta
+        .findOne({ sha256, size: f.size })
+        .select('_id gridFsId filename mimeType size sha256 kind')
+        .lean<FMLean>()
+        .exec();
+
+      if (existing) {
+        if (DEDUPE_MODE === 'strict') {
+          duplicates.push({
+            duplicateOf: existing._id.toString(),
+            gridFsId: existing.gridFsId.toString(),
+            filename: existing.filename,
+            mimeType: existing.mimeType,
+            size: existing.size,
+            sha256: existing.sha256,
+          });
+          continue;
+        } else {
+          const meta = await FileMeta.create({
+            gridFsId: existing.gridFsId,
+            filename: existing.filename, // o tu convención si prefieres
+            mimeType: f.mimetype,
+            size: f.size,
+            sha256,
+            kind: existing.kind,
+            uploadedBy,
+            authorId,
+            authorName,
+            temaIds,
+            fuente,
+            linkDocument,
+            version: 1,
+          });
+          created.push({
+            fileId: meta._id.toString(),
+            gridFsId: existing.gridFsId.toString(),
+            filename: meta.filename,
+            mimeType: meta.mimeType,
+            size: meta.size,
+            sha256: meta.sha256,
+            dedup: true,
+          });
+          continue;
+        }
+      }
+
+      // 2) Subir a GridFS
+      const filename = `${idUserModification}/${originalFixed}`;
+      const readStream = Readable.from(f.buffer);
+      const uploadStream = bucket.openUploadStream(filename, {
+        contentType: f.mimetype,
+        metadata: {
+          fieldname: f.fieldname,
+          originalName: originalFixed, // usa el normalizado
+          uploadedBy: uploadedBy.toHexString(),
+        },
+      });
+
+      let gridFsId: Types.ObjectId | null = null;
+
+      try {
         readStream.pipe(uploadStream);
         await finished(uploadStream);
-        const gridFsId = uploadStream.id as Types.ObjectId;
+        gridFsId = uploadStream.id as Types.ObjectId;
 
-        // 3.4 construir documento FileMeta (usa tu schema exacto)
         const doc = await FileMeta.create({
           gridFsId,
           filename,
@@ -134,45 +167,102 @@ try {
           size: f.size,
           sha256,
           kind: pickKind(f.mimetype),
-          authorId: authorId,
+          authorId,
           authorName,
           uploadedBy,
-          temaIds,          // array de números
-        //   tags,             // array de strings, máx 5 ya limitado aquí
-          fuente,           // number
+          temaIds,
+          fuente,
           linkDocument,
-          estado: 'SUBIDO', // estado inicial
-          estadoHistory: [{
           estado: 'SUBIDO',
-          changedBy: uploadedBy,
-          reason: 'pendiente de evaluación'
-         }],
+          estadoHistory: [
+            {
+              estado: 'SUBIDO',
+              changedBy: uploadedBy,
+              reason: 'pendiente de evaluación',
+            },
+          ],
+          version: 1,
         });
-  
+
         created.push({
-          fileId: doc._id.toHexString(),
-          gridFsId: gridFsId.toHexString(),
+          fileId: doc._id.toString(),
+          gridFsId: gridFsId.toString(),
           filename: doc.filename,
           mimeType: doc.mimeType,
           size: doc.size,
-          kind: doc.kind,
           sha256: doc.sha256,
-          temaIds: doc.temaIds,
-        //   tags: doc.tags,
-          fuente: doc.fuente,
-          estado: doc.estado,
-          createdAt: doc.createdAt,
         });
+      } catch (e: any) {
+        // carrera por índice único (sha256,size)
+        if (e?.code === 11000) {
+          if (gridFsId) {
+            try { await bucket.delete(gridFsId); } catch {}
+          }
+          const ex2 = await FileMeta
+            .findOne({ sha256, size: f.size })
+            .select('_id gridFsId filename mimeType size sha256 kind')
+            .lean<FMLean>()
+            .exec();
+          if (ex2) {
+            if (DEDUPE_MODE === 'strict') {
+              duplicates.push({
+                duplicateOf: ex2._id.toString(),
+                gridFsId: ex2.gridFsId.toString(),
+                filename: ex2.filename,
+                mimeType: ex2.mimeType,
+                size: ex2.size,
+                sha256: ex2.sha256,
+              });
+            } else {
+              const meta = await FileMeta.create({
+                gridFsId: ex2.gridFsId,
+                filename: ex2.filename,
+                mimeType: f.mimetype,
+                size: f.size,
+                sha256,
+                kind: ex2.kind,
+                uploadedBy,
+                authorId,
+                authorName,
+                temaIds,
+                fuente,
+                linkDocument,
+                version: 1,
+              });
+              created.push({
+                fileId: meta._id.toString(),
+                gridFsId: ex2.gridFsId.toString(),
+                filename: meta.filename,
+                mimeType: meta.mimeType,
+                size: meta.size,
+                sha256: meta.sha256,
+                dedup: true,
+              });
+            }
+            continue;
+          }
+        }
+        throw e;
       }
-  
-      return res.status(200).json({
-        ok: true,
-        count: created.length,
-        files: created,
-        fields, // para inspección (puedes quitarlo en prod)
+    } // end for
+    // Respuesta coherente
+    if (DEDUPE_MODE === 'strict' && duplicates.length && created.length === 0) {
+      return res.status(409).json({
+        ok: false,
+        error: 'DUPLICATE_FILE',
+        message: 'Archivo(s) ya existe(n).',
+        duplicates,
+        created,
       });
-    } catch (err: any) {
-      console.error('upload-gridfs error:', err);
-      return res.status(500).json({ error: err?.message || 'Error inesperado' });
     }
+    return res.status(200).json({
+      ok: true,
+      count: created.length,
+      created,
+      duplicates: DEDUPE_MODE === 'strict' ? duplicates : undefined,
+    });
+  } catch (err: any) {
+    console.error('upload-gridfs error:', err);
+    return res.status(500).json({ error: err?.message || 'Error inesperado' });
   }
+}

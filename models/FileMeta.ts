@@ -51,7 +51,10 @@ const fileSchema = new Schema(
 );
 //índices para listado 
 fileSchema.index({temaIds: 1, estado: 1, createdAt: -1 });
-
+fileSchema.index(
+  { sha256: 1, size: 1 },
+  { unique: true, partialFilterExpression: { sha256: { $exists: true } } }
+);
 // Método helper para cambiar estado con validación
 fileSchema.methods.cambiarEstado = async function (
   nextEstado: Estado,

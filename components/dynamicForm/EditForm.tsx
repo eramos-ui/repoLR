@@ -199,12 +199,27 @@ export const EditForm: React.FC<EditFormProps> = ({
         body: fd, // ⚠️ No pongas Content-Type manualmente
       });
       const dataResp = await res.json();
-      // console.log('respone del upload-gridfs',dataResp)
+      if (!apiSaveForm || apiSaveForm.length === 0){
+        if (dataResp.ok) {
+          alert("Grabado exitosamente");
+          setTimeout(()=>{
+            onClose();
+          }, 1000);
+        } else {
+          if (dataResp.status === 400) {
+            alert(`${dataResp.error}`);     
+          }else{
+            console.log('errorMsg',dataResp.message,typeof dataResp.erro)
+            const errorMsg=( typeof dataResp.error ==='object')? dataResp.error.message:dataResp.message;          
+            alert(`${errorMsg}.`);    
+          }
+        }
+        return
+      } //viene como parámetro y si no está no hay nada que salver (caso que todo se guarda en File)
     }
     /*
      2. Si además o sólo hay apiSaveForm se actualiza la coleección que corresponda
     */
-    if (!apiSaveForm || apiSaveForm.length === 0) return //viene como parámetro y si no está no hay nada que salver (caso que todo se guarda en File)
     const password = requirePassword ? await bcrypt.hash('jara', 10) : undefined;
     const withRutFields=fields.filter(field => field.type === 'RUT');//field que tienen field type='RUT' para formatearlo estándar
     let updateValues:any=values;
