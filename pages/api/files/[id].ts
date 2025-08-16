@@ -58,7 +58,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const bucket = getBucket();
+    const bucket =await getBucket();
 
     // Busca metadatos del archivo en uploads.files
     const fileDoc = await bucket.find({ _id: new ObjectId(id) }).next();

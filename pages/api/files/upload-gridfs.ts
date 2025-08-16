@@ -84,7 +84,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const temaIds = toNumberArray(row.tema);
     const linkDocument = typeof row.linkDocument === 'string' && row.linkDocument.trim() ? row.linkDocument.trim() : undefined;
 
-    const bucket = getBucket();
+    const bucket = await getBucket();
 
     // acumuladores de resultado
     const created: any[] = [];

@@ -20,8 +20,8 @@ import { usePathname } from 'next/navigation';
 import { MenuProvider } from '@/context/MenuContext';
 //import CotizarLayout from "./cotizar/layout";  
 
-import mapboxgl from 'mapbox-gl';
-mapboxgl.accessToken= process.env.NEXT_PUBLIC_ACCESS_token;//ojo que usar cliente para renderizar, Sólo funciona en el cliente
+// import mapboxgl from 'mapbox-gl';
+// mapboxgl.accessToken= process.env.NEXT_PUBLIC_ACCESS_token;//ojo que usar cliente para renderizar, Sólo funciona en el cliente
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const pathname                                    = usePathname();

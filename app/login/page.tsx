@@ -81,7 +81,7 @@ export default function LoginPage() {
             {submitting ? "Ingresando..." : "Ingresar con clave interna"}
           </button>
           
-              {/* <div className="my-4 text-center text-gray-600">o</div>
+              <div className="my-4 text-center text-gray-600">o</div>
               <button
                 onClick={() => handleSocialLogin('google')}
                 className="w-full bg-white text-black border border-gray-300 px-4 py-2 rounded hover:bg-gray-100 mb-4 flex items-center justify-center"
@@ -111,7 +111,7 @@ export default function LoginPage() {
                   />
                 </svg>
                 Conectarse con Google
-              </button> */}
+              </button>
         </form>
 
         <div className="mt-3 flex justify-between text-sm">

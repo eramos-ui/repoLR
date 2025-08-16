@@ -10,7 +10,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(400).json({ error: "gridFsId no válido" });
   }
 
-  const bucket = getBucket();
+  const bucket = await getBucket();
 
   try {
     const _id = new ObjectId(gridFsId);
