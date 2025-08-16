@@ -5,6 +5,7 @@ Baja un archivo para el view\[id]
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { ObjectId } from 'mongodb';
 import { getBucket  } from "@/lib/db";
+import path from 'path';
 
 // Next no necesita parsear body en GET; lo desactivamos por si acaso
 export const config = { api: { bodyParser: false,  responseLimit: false, } };
@@ -15,7 +16,31 @@ function encodeRFC5987(str: string) {
     .replace(/\*/g, '%2A')
     .replace(/%20/g, '+');
 }
-
+// → genera un fallback ASCII seguro para `filename=`
+//   - toma solo el basename
+//   - quita diacríticos
+//   - reemplaza no-ASCII por _
+//   - elimina / \ " ; y controla longitud
+function asciiFallbackFilename(input: string): string {
+    // basename POSIX (GridFS puede tener '/')
+    const base = path.posix.basename(input || 'archivo');
+  
+    // quita diacríticos (NFKD + elimina combining marks)
+    let name = base.normalize('NFKD').replace(/[\u0300-\u036f]/g, '');
+  
+    // reemplaza separadores y caracteres problemáticos
+    name = name.replace(/[\/\\]/g, '_').replace(/[";]/g, '_');
+  
+    // reemplaza cualquier no-ASCII por _
+    name = name.replace(/[^\x20-\x7E]/g, '_').trim();
+  
+    if (!name) name = 'archivo';
+  
+    // controla longitud total (ej. 150)
+    const ext = path.extname(name);
+    const stem = name.slice(0, Math.max(1, 150 - ext.length));
+    return `${stem}${ext}`;
+  }
 function shouldInline(ct: string) {
     return ct.startsWith('image/') || ct.startsWith('audio/') || ct.startsWith('video/') || ct === 'application/pdf';
   }
@@ -27,7 +52,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   // id viene de la ruta /api/files/[id]
-  const { id } = req.query;
+  const { id, download } = req.query;
   if (!id || Array.isArray(id) || !ObjectId.isValid(id)) {
     return res.status(400).json({ error: 'ID inválido' });
   }
@@ -42,17 +67,29 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     const contentType = (fileDoc as any).contentType || 'application/octet-stream';
-    const filename = fileDoc.filename || 'archivo';
-    const length = (fileDoc as any).length as number | undefined;
+    const rawName = fileDoc.filename || 'archivo';
 
+    // 👇 clave: basename y doble variante del nombre
+    const filenameAscii  = asciiFallbackFilename(rawName);   // solo ASCII
+    const filenameUtf8PE = encodeRFC5987(path.posix.basename(rawName)); // UTF-8 %encoded
+
+    const length = (fileDoc as any).length as number | undefined;
     // Si pasas ?download=1 en la URL, fuerza descarga
-    const forceDownload = req.query.download === '1';
+    const forceDownload = download === '1';
     const disp = !forceDownload && shouldInline(contentType) ? 'inline' : 'attachment';
+
+
 
     // Headers
     res.setHeader('Content-Type', contentType);
     if (typeof length === 'number') res.setHeader('Content-Length', String(length));
-    res.setHeader('Content-Disposition', `${disp}; filename="${filename}"; filename*=UTF-8''${encodeRFC5987(filename)}`);
+
+       // ⚠️ IMPORTANTE: `filename=` debe ser ASCII puro.
+    res.setHeader(
+    'Content-Disposition',
+    `${disp}; filename="${filenameAscii}"; filename*=UTF-8''${filenameUtf8PE}`
+    );    
+    
     res.setHeader('Cache-Control', 'public, max-age=86400, immutable');
 
     // Stream de descarga desde GridFS
