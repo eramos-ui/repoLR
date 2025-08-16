@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import nodemailer from "nodemailer";
-import { connectDB, getDb } from "@/lib/db";
+import { connectDB, getDb, getBucket } from "@/lib/db";
 import { GridFSBucket, ObjectId } from "mongodb";
 
 const transporter = nodemailer.createTransport({
@@ -19,7 +19,8 @@ interface Attachment {
 
 async function getAttachments(attachments: Attachment[]) {//Aquí se obtienen los  archivos adjuntos
   const db = await getDb();
-  const bucket = new GridFSBucket(db, { bucketName: "uploads" });
+  // const bucket = new GridFSBucket(db, { bucketName: "uploads" });
+  const bucket =await getBucket();
   const result = [];
 
   for (const attachment of attachments) {

@@ -1,6 +1,6 @@
 //api/files/download-file
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { connectDB, getDb } from '@/lib/db'; 
+import { connectDB, getDb, getBucket } from '@/lib/db'; 
 import { GridFSBucket } from 'mongodb';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -11,7 +11,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     await connectDB();
     const db = await getDb();
-    const bucket = new GridFSBucket(db, { bucketName: "uploads" });
+    // const bucket = new GridFSBucket(db, { bucketName: "uploads" });
+    const bucket= await getBucket()
 
     // Validar parámetros
     const query: any = { "metadata.fileClass": fileClass }; //todas las consultas tiene fileClass y idProject 
