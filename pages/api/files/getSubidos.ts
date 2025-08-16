@@ -57,10 +57,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const fechaSubido=(new Date( it.updatedAt)).toISOString().split('T')[0];
       const [year, month, day] = fechaSubido?.split("-") || [];
       const fechaSubidoFormatted = `${day}/${month}/${year}`;
+      let  filename=it.filename
+      if (it.filename.includes('/')){
+         filename=it.filename.split('/')[1]; //para extraer el id
+      }
       return {
         fileMetaId: String(it._id),//id de files (FileMeta)
         gridFsId,//id del archivo (uploads.files)
-        filename: it.filename,
+        filename,
         updatedAt: fechaSubidoFormatted,     // timestamp del doc (por timestamps:true)
         estadoActual: estadoActual,     // estado actual
         reason: lastReason,          // motivo del último cambio (si existe)

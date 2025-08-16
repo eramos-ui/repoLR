@@ -13,9 +13,6 @@ import _ from 'lodash';
 
 import {  FormConfigDFType, FormFieldDFType, FormValuesDFType, GridColumnDFType, GridRowDFType } from '@/types/interfaceDF';
 
-// import { CustomAlert, FormRow } from '../controls';
-// import { saveFormData } from '@/utils/apiHelpers';
-// import { formatRut } from '@/utils/formatRut';
 import CustomModal from '../general/CustomModal';
 import { getValidationSchemaDynamicForm } from '@/utils/validationSchema';
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
@@ -89,7 +86,8 @@ export const EditForm: React.FC<EditFormProps> = ({
   ...props
 }) => {
   const formRef = useRef<HTMLFormElement | null>(null);
-  // console.log('en EditForm fields, row, formConfig',fields, row,formConfig);
+  //console.log('en EditForm fields, formConfig',fields,formConfig);
+  // console.log('en EditForm  row', row);
  
   // const rowInitial = buildInitialValues(fields, row);
   const rowInitial = useMemo(() => buildInitialValues(fields, row), [fields, row]);
@@ -268,8 +266,6 @@ export const EditForm: React.FC<EditFormProps> = ({
   }, {} as { [key: number]: FormFieldDFType[] });
   if (!isOpen) return null;  
   if (!row) <></>; 
-  // console.log('en EditForm fields',fields);
-  // const validationSchema = getValidationSchemaDynamicForm(fields);
 
   //  console.log("🧾 groupedFields:", groupedFields);
   return (
@@ -302,9 +298,8 @@ export const EditForm: React.FC<EditFormProps> = ({
             return errors;
           }
          }}
-
         onSubmit={async (values, { setSubmitting, validateForm }) => {
-          // console.log("🚀 onSubmit ejecutado con:", values);
+          //  console.log("🚀 onSubmit ejecutado con:", values);
           const correctedValues = normalizeStringValues(values, fields);
           const errors = await validateForm(correctedValues);
            console.log('Errores de validación:',errors);

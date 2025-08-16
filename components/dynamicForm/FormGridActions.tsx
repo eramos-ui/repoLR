@@ -41,10 +41,10 @@ const FormGridActions: React.FC<GridActionsProps> = ({ onEdit, onDelete, onZoom,
   }
 
   return (
-    <div className="flex space-x-2">
+    <div className="space-x-2 text-center">
       { (actions?.includes('edit')) &&
-      <FormCustomTooltip text={`${tooltipsForEdit}` }  color="black" backgroundColor="lightblue" position="top">
-        <button type="button" onClick={onEdit} className="text-blue-500 hover:text-blue-700">
+      <FormCustomTooltip text={`${tooltipsForEdit}` } color="black" backgroundColor="lightblue" position="top">
+        <button type="button" onClick={onEdit} className="text-blue-500 hover:text-blue-700" >
           <FaEdit />
         </button>
       </FormCustomTooltip>

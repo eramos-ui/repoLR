@@ -61,14 +61,14 @@ import { EditForm } from '@/components/dynamicForm/EditForm';
       }  
       let data:FormConfigDFType;
       try { 
-        console.log('lee form apiGetForm',`/api/forms/${formId}`);
+        // console.log('lee form apiGetForm',`/api/forms/${formId}`);
         const res = await fetch(`/api/forms/${formId}`);//los datos del submenu { buttons, fields,formn} 
         // console.log('en [formId] res',res);
         if (!res.ok) {
           throw new Error(`Failed to fetch form data: ${res.statusText}`);
         }
         data= await res.json();
-        console.log('en [formId] jsonForm',data); 
+        //  console.log('en [formId] jsonForm',data); 
      
         setInitialValues({items:data.rows});//debe llevar el nombre para el initialValues
         setFormData( data );//Devuelve el campo jsonForm de la tabla Form
@@ -98,11 +98,11 @@ import { EditForm } from '@/components/dynamicForm/EditForm';
     const fetchData = async (apiGetRows:string) => {//
       let api='/api'+(apiGetRows.substring(0,1) === '/' ? apiGetRows : '/'+apiGetRows);
       try{
-         console.log('en [formId] apiGetRows',api)
+        //  console.log('en [formId] apiGetRows',api)
         const res = await fetch(api);
         const data = await res.json();
-          console.log('rows',data)
-        setRows(data);
+        // console.log('rows',data.items)
+        setRows(data.items);
       } catch (err) {
         if (err instanceof Error) {
           setError(err.message);
@@ -226,7 +226,10 @@ import { EditForm } from '@/components/dynamicForm/EditForm';
   };
   const formSize = formData.formSize || {};
   const handleEdit = (index: number) => {
-    // console.log ('en Page de formId handleEdit index',index )
+    const row =(rows && rows[index])?rows[index]: null;
+    console.log ('en Page de formId handleEdit index',index )
+    console.log ('en Page de formId handleEdit rows',rows )
+    console.log ('en Page de formId handleEdit editingRowIndex,row',editingRowIndex,row )
     
     // const items = rows.items;
     setEditingRowIndex(index);
@@ -249,8 +252,6 @@ import { EditForm } from '@/components/dynamicForm/EditForm';
       const inicio=ruta.split('[')[1];
       const param=inicio.split(']')[0];      
       const valueParam=row[param];
-      console.log('row',row);
-      console.log('ruta ini, param, valueParam',ruta,param,valueParam);
       ruta=urlInicio+replaceParam(valueParam)+inicio.split(']')[1];
       //  ruta=uri+'/api/files/689f4b4ef266124a4b8bfaf6'
       console.log('ruta final', `${ruta}`);

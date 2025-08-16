@@ -108,10 +108,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }else if(it.uploadedBy && !authorName) {
         authorName=usuarios.find( u => u._id.toString() ===it.uploadedBy.toString()).name;
       }
+      let  filename=it.filename
+      if (it.filename.includes('/')){
+         filename=it.filename.split('/')[1]; //para extraer el id
+      }
       return {
         fileMetaId: String(it._id),//id de files (FileMeta)
         gridFsId,//id del archivo (uploads.files)
-        filename: it.filename,
+        filename,
         updatedAt: fechaSubidoFormatted,     // timestamp del doc (por timestamps:true)
         estadoActual: estadoActual,     // estado actual
         reason: lastReason,          // motivo del último cambio (si existe)

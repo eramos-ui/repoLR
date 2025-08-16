@@ -15,26 +15,29 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (typeof values === 'string') {//para que ande en postman y en el fetch
         parsed = JSON.parse(values);
     }
-    const { fileMetaId, idUserModification: changedBy, aprueba, comentario, filename } = parsed;
+    // console.log('en changedEstado parsed',parsed);
+    const { row ,idUserModification: changedBy } = parsed;
+    const gridFsId=row.gridFsId;
+    const filename=row.filename;
     let estado='';
-    let reason=comentario;
-    if (aprueba === 'A'){
+    let reason=row.comentario;
+    if (row.aprueba === 'A'){
          estado='APROBADO';
          reason='Documento revisado por supervisor'
     }else{
          estado='RECHAZADO';
     }
-    console.log('gridFsId,changedBy,estado,reason',fileMetaId,changedBy,estado,reason)
+    console.log('gridFsId,changedBy,estado,reason',gridFsId,changedBy,estado,reason)
+    
+    if (!gridFsId || !estado) {
+      return res.status(400).json({ error: 'Faltan datos obligatorios: gridFsId o estado' });
+    }    
+    const file = await FileMeta.findOne({ gridFsId:gridFsId });
+    // console.log('file',file)
     // res.status(200).json({ message: 'Estado actualizado correctamente'}); return;
 
-    if (!fileMetaId || !estado) {
-      return res.status(400).json({ error: 'Faltan datos obligatorios: gridFsId o estado' });
-    }
-
-    const file = await FileMeta.findOne({ _id:fileMetaId });
-
     if (!file) {
-      return res.status(404).json({ error: 'Archivo no encontrado:'+fileMetaId +', filename: '+filename });
+      return res.status(404).json({ error: 'Archivo no encontrado:'+gridFsId +', filename: '+filename });
     }
 // res.status(200).json({ message: 'Estado actualizado correctamente'}); return;
 
