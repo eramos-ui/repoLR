@@ -14,7 +14,7 @@ import { SidebarToggleProvider } from '../context/SidebarToggleContext';
 
 import '../styles/globals.css';
 import AppContent from '../components/general/AppContent';
-import { MapProvider,  PlacesProvider } from '@/app/context'; //context de map mapboxgl debe ir dentro de app
+// import { MapProvider,  PlacesProvider } from '@/app/context'; //context de map mapboxgl debe ir dentro de app
 
 import { usePathname } from 'next/navigation';
 import { MenuProvider } from '@/context/MenuContext';
@@ -38,8 +38,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
        <body>
         <ThemeProvider>
           { isCotizarPage ? children : (// si es cotizar, no se renderiza el layout
-            <PlacesProvider>
-              {/* <MapProvider> */}
+            // <PlacesProvider>
+            //   <MapProvider>
                 <SidebarToggleProvider>
                   <SessionProvider>
                     <MenuProvider> 
@@ -47,8 +47,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     </MenuProvider>
                   </SessionProvider>
                 </SidebarToggleProvider>
-              {/* </MapProvider> */}
-            </PlacesProvider>
+            //   </MapProvider>
+            // </PlacesProvider>
           )}
         </ThemeProvider>
       </body>
