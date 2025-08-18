@@ -80,7 +80,7 @@ export default function LoginPage() {
             <FontAwesomeIcon icon={faSignInAlt} className="mr-1" />
             {submitting ? "Ingresando..." : "Ingresar con clave interna"}
           </button>
-          
+{/*           
               <div className="my-4 text-center text-gray-600">o</div>
               <button
                 onClick={() => handleSocialLogin('google')}
@@ -111,7 +111,7 @@ export default function LoginPage() {
                   />
                 </svg>
                 Conectarse con Google
-              </button>
+              </button> */}
         </form>
 
         <div className="mt-3 flex justify-between text-sm">

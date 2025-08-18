@@ -139,7 +139,7 @@ const AppContent = ({ children }: { children: React.ReactNode }) => {
   if (loading ) {
     return <LoadingIndicator  message='cargando' />; // Mostrar un indicador de carga mientras se determina la autenticación
   }
-  // console.log('en AppContent render user menuData',user,menuData)
+// console.log('en AppContent render user menuData',user,menuData)
   return (
     <>
         <Navbar 

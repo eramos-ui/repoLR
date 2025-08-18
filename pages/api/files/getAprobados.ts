@@ -26,7 +26,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       res.status(500).json({ error: "Error al leer fuentes" });
   };
   try{
-    usuarios = await getUsersVigentes() 
+    usuarios = await getUsersVigentes();
 
     } catch (err) {
         console.log('Error');
@@ -39,12 +39,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (Number(idTema) > 0){
     console.log('idTema',idTema)
   }
+  
   try {
     if (req.method !== "GET") {
       return res.status(405).json({ error: "Método no permitido" });
     }
-   
-
+    
     let itemsLeidos = await FileMeta.aggregate([
       {
         $addFields: {
@@ -82,13 +82,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         },
       },
     ]);
-    // console.log('itemsLeidos',itemsLeidos,idTema)
+    //  console.log('itemsLeidos',itemsLeidos,idTema)
   
     if (Number(idTema)<9999){
       itemsLeidos=itemsLeidos.filter( it => it.temaIds.includes(idTema));
     }
-    // console.log('fuentes',fuentes)
-    // console.log('usuarios',usuarios)
+    console.log('fuentes',fuentes)
+    console.log('usuarios',usuarios)
+    // res.status(200).json('probando API');
   // Mapear SOLO lo que necesito en la grilla
     const items = itemsLeidos.map((it) => {
       // const lastHistory = (it.lastHistory ?? []).slice(-1)[0];
@@ -103,9 +104,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const origenDescripcion=fuentes.find( x => x.idFuente === it.fuente).descripcion;
       let authorName=it.authorName;
       if (it.authorId && !authorName ){
-         authorName=usuarios.find( u => u._id.toString() ===it.authorId.toString()).name;
+        // console.log('autorID',it.authorId)
+        //  authorName=usuarios.find( u => u._id === it.authorId).name;
+        authorName = usuarios.find(u => u._id?.equals(it.authorId))?.name ?? '(desconocido)';
         //  console.log('autor',authorName)
-      }else if(it.uploadedBy && !authorName) {
+       }else if(it.uploadedBy && !authorName) {
         authorName=usuarios.find( u => u._id.toString() ===it.uploadedBy.toString()).name;
       }
       let  filename=it.filename
@@ -126,9 +129,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         // downloadUrl: makeAbsUrl(req, `/api/files/${encodeURIComponent(gridFsId)}?disposition=attachment`),
       };
     });
+    console.log('items',items)
     res.status(200).json({ items });
   } catch (error) {
     console.error("Error en getSubidos:", error);
     res.status(500).json({ error: "Error al obtener archivos en estado SUBIDO" });
   }
+
 }

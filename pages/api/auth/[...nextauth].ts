@@ -1,9 +1,11 @@
 
 export const runtime = 'nodejs';
 
-import NextAuth,  { AuthOptions } from 'next-auth';
+import NextAuth,  { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import GoogleProvider from 'next-auth/providers/google';
+import Google from 'next-auth/providers/google';
+import { MongoDBAdapter } from "@auth/mongodb-adapter";
+import { clientPromise } from "@/lib/mongoClient";
 import { compare } from 'bcryptjs';
 
 
@@ -13,7 +15,9 @@ import { getUserVigenteByEmail } from '@/app/services/users/getUserVigenteByEmai
 import type { Session } from "next-auth"; 
 connectDB();
 console.log('En [...nextauth].ts '); 
-export const authOptions: AuthOptions = {
+
+export const authOptions: NextAuthOptions = {
+
   providers: [
     CredentialsProvider({
       name: 'Credentials',
@@ -48,9 +52,9 @@ export const authOptions: AuthOptions = {
       },
     }),
     //si es Google aquí se ejecuta primero
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID || '',
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
+    Google({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
       async profile(profile, tokens) {
         const user=await getUserVigenteByEmail(profile.email);
         console.log('🔑 google provider',user);
@@ -63,6 +67,21 @@ export const authOptions: AuthOptions = {
         };
       },
     }),
+    // GoogleProvider({
+    //   clientId: process.env.GOOGLE_CLIENT_ID || '',
+    //   clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
+    //   async profile(profile, tokens) {
+    //     const user=await getUserVigenteByEmail(profile.email);
+    //     console.log('🔑 google provider',user);
+    //     return {
+    //       id: user.id,
+    //       email: user.email,
+    //       avatar: user.avatar,
+    //       name: user.name,
+    //       theme: user.theme,
+    //     };
+    //   },
+    // }),
   ],
   callbacks: {
     async signIn({ user }: { user: any }) {
