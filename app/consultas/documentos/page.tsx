@@ -77,13 +77,16 @@ const ConsultaRepositorioPage = () => {
   <div className="p-4">
     <h1 className="text-3xl font-bold">Consulta documentos en el repositorio</h1>
     <div className="mb-1 flex items-start space-x-3">
-      <div className="w-1/5" >
-        <CustomSelect  width='300px' theme="light"  label='Temas' captionPosition='top'
-                  onChange={(e:any) =>{ handleChange(e)}} value={temaSelected?.toString()}
-                  options={temaOptions || []}
-                  placeholder="Seleccione tema"
-        />
-      </div>
+       { 
+        temaOptions &&   
+        <div className="w-1/5" >
+          <CustomSelect  width='300px' theme="light"  label='Temas' captionPosition='top'
+                    onChange={(e:any) =>{ handleChange(e)}} value={temaSelected?.toString()}
+                    options={temaOptions || []}
+                    placeholder="Seleccione tema"
+          />
+        </div>
+       }    
       </div>
       {(rows && rows.length>0) ? (
            <div className="flex justify-center items-center w-full">
