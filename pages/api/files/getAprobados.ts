@@ -87,8 +87,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (Number(idTema)<9999){
       itemsLeidos=itemsLeidos.filter( it => it.temaIds.includes(idTema));
     }
-    console.log('fuentes',fuentes)
-    console.log('usuarios',usuarios)
+    // console.log('fuentes',fuentes)
+    // console.log('usuarios',usuarios)
     // res.status(200).json('probando API');
   // Mapear SOLO lo que necesito en la grilla
     const items = itemsLeidos.map((it) => {
@@ -129,7 +129,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         // downloadUrl: makeAbsUrl(req, `/api/files/${encodeURIComponent(gridFsId)}?disposition=attachment`),
       };
     });
-    console.log('items',items)
+    // console.log('items',items)
     res.status(200).json({ items });
   } catch (error) {
     console.error("Error en getSubidos:", error);

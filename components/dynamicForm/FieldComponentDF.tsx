@@ -78,7 +78,7 @@ export const FieldComponentDF: React.FC<FieldComponentDFProps> = ({ field, value
     // console.log('en FieldComponentDF staticOptions',staticOptions,field.apiOptions);
     if (field.apiOptions && field.apiOptions.length>0 && type  ==='selectNumber'){//resuelve las options cuando es sp 
   }
-  if (loading) <LoadingIndicator />
+  if (loading) return <LoadingIndicator />;
  //if (field.name === 'rut') { console.log('en FieldComponentDF field',type,field,fieldName,errors?.rut, touched?.rut )};
   // console.log('en FieldComponentDF field',field,isVisible);
   //'text' | 'password' | 'email' | 'number' | 'tel' | 'url' | 'search' | 'color' | 'file' | 'RUT'

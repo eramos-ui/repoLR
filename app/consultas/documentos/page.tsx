@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-// import { useSession } from 'next-auth/react'; 
 import { ColumnConfigType, GridRowType } from "@/types/interfaces";
 import { useRouter } from "next/navigation";
 import { LoadingIndicator } from "@/components/general/LoadingIndicator";
@@ -23,7 +22,7 @@ const ConsultaRepositorioPage = () => {
     const [ loading, setLoading             ]                       = useState<boolean>(true);
     const [ rows, setRows ]                                         = useState<GridRowType[]>([]);
     const [ temaOptions, setTemaOptions ]                           = useState<{value:number,label:string}[]>([]);
-    const [ temaSelected, setTemaSelected ]                         = useState<number>();
+    const [ temaSelected, setTemaSelected ]                         = useState<number  | undefined>( undefined);
     const [ gridColumns, setGridColumns ]                           = useState<ColumnConfigType<GridRowType>[]>(columns);
     const [ currentPage, setCurrentPage ]                           = useState<number>(0);
     const [ gridKey, setGridKey ]                                   = useState<number>(0);
@@ -33,14 +32,20 @@ const ConsultaRepositorioPage = () => {
           const response = await fetch('/api/forms/loadOptions/getTemas');
           const data = await response.json();
           // console.log('tema',data);
-          let dataPlusAll=data; 
-          dataPlusAll.push({value:9999,label:' Todos los documentos del repositorio'});
-          setTemaOptions(dataPlusAll.map((tema: any) => (tema))
-                .sort((a: { label: string; }, b: { label: string; }) => {//orden alfabético
-                  if (!a.label) return 1;
-                  if (!b.label) return -1;
-                  return String(a.label).localeCompare(String(b.label));
-            }));
+          // let dataPlusAll=data; 
+          // dataPlusAll.push({value:9999,label:' Todos los documentos del repositorio'});
+          // setTemaOptions(dataPlusAll.map((tema: any) => (tema))
+          //       .sort((a: { label: string; }, b: { label: string; }) => {//orden alfabético
+          //         if (!a.label) return 1;
+          //         if (!b.label) return -1;
+          //         return String(a.label).localeCompare(String(b.label));
+          //   }));
+          const dataPlusAll = [...data, { value: 9999, label: ' Todos los documentos del repositorio' }];
+          setTemaOptions(
+            dataPlusAll
+              .slice() // copia defensiva
+              .sort((a, b) => String(a.label || '').localeCompare(String(b.label || '')))
+          );
             setLoading(false);
       }
       fetchData();
@@ -66,13 +71,14 @@ const ConsultaRepositorioPage = () => {
       router.push(`${ruta}`);
     } 
     if (loading) {
-        < LoadingIndicator/>
-        return;
+      return < LoadingIndicator/>;
+       
     }
-    const handleChange=(value: number) =>{      
-    // console.log('handleSelect',value)
-    setTemaSelected(value);
-    }
+    const handleChange = (value: number) => setTemaSelected(value);
+    // const handleChange=(value: number) =>{      
+    // // console.log('handleSelect',value)
+    // setTemaSelected(value);
+    // }
  return(
   <div className="p-4">
     <h1 className="text-3xl font-bold">Consulta documentos en el repositorio</h1>
@@ -81,9 +87,9 @@ const ConsultaRepositorioPage = () => {
         temaOptions &&   
         <div className="w-1/5" >
           <CustomSelect  width='300px' theme="light"  label='Temas' captionPosition='top'
-                    onChange={(e:any) =>{ handleChange(e)}} value={temaSelected?.toString()}
-                    options={temaOptions || []}
-                    placeholder="Seleccione tema"
+              onChange={(v) =>{ handleChange(v as number)}} value={temaSelected}
+              options={temaOptions || []}
+              placeholder="Seleccione tema"
           />
         </div>
        }    

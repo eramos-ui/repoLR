@@ -15,7 +15,7 @@ type SidebarProps = {
   // menuData: MenuConfig | null;
   menuData: MenuItem[] | null;
 };
-const systemName=process.env.NEXT_PUBLIC_SYSTEM_NAME?.toLocaleLowerCase() || 'gastoscomunes';
+const systemName=process.env.NEXT_PUBLIC_SYSTEM_NAME?.toLocaleLowerCase() || 'repositorio';
 
 const Sidebar: React.FC<SidebarProps> = ({ isVisible, closeSidebar, user, menuData }) => {
   

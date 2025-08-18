@@ -26,7 +26,7 @@ const ConsultaEventosPage = () => {
         const fetchData = async () => {
             const response = await fetch('/api/eventos/futuros');
             const data = await response.json();
-             console.log('tema',data);
+            //  console.log('tema',data);
              setRows(data.eventos) 
              setLoading(false);
         }
@@ -43,8 +43,7 @@ const ConsultaEventosPage = () => {
         setLoading(false);
     }
     if (loading) {
-        < LoadingIndicator/>
-        return;
+      return  < LoadingIndicator/>;      
     }
 return (
     <div className="p-4">

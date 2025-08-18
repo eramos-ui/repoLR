@@ -108,7 +108,7 @@ export const FieldComponent: React.FC<{ field: FormFieldDFType, row:any,
      fetchOptions();
      //console.log(' en useEffect spFetchOptions, dependentValue',spFetchOptions, dependentValue);
   }, [spFetchOptions, dependentValue,type]);
-  if (loading) <LoadingIndicator />
+  if (loading) return <LoadingIndicator />;
 
   // const handleSelectChange=(newValue:string | string[])=>{
   //   const newRow={...row, [field.name]: newValue};

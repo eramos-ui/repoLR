@@ -4,8 +4,11 @@ const require = createRequire(import.meta.url);
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'standalone'
+  output: 'standalone',
+  // ⬇️ habilita sourcemaps en el navegador para builds de producción
+  productionBrowserSourceMaps: true,
 };
+
 export default nextConfig;
 // const nextConfig = {
 //   images: {
