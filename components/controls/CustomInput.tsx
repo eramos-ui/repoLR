@@ -128,7 +128,7 @@ export const CustomInput = ({
     const [ formattedValue, setFormattedValue ] = useState<string>(value ? value.toString() : "");
     const [ valueInside, setValueInside ]       = useState<any>( value ? value.toString() : "");
     const [ rutError, setRutError ]             = useState<string | null>(null);
-    // console.log('CustomInput ',label,type,formatNumber,value);
+    console.log('CustomInput field,style ',field,style);
     const inputClassNames = ` 
     custom-input-field ${theme}
     ${leftIcon ? 'has-left-icon' : ''} 
@@ -203,8 +203,7 @@ export const CustomInput = ({
               value: parsed,
             },
           });
-        }
-    
+        }    
         if (onChange) {
           onChange({
             ...event,
@@ -217,7 +216,6 @@ export const CustomInput = ({
     
         return;
       }
-    
       // Caso: RUT
       if (type === "RUT") {
         const formatted = formatRut(rawInput);
@@ -318,7 +316,8 @@ export const CustomInput = ({
         className={`custom-input-container ${theme} ${captionPosition}`}
       >
         <label className={`custom-input-label ${captionPosition} `}
-          style={{ marginBottom: captionPosition === "top" ? "0.5rem" : "0"}}
+          // style={{ ...style,marginBottom: captionPosition === "top" ? "0.5rem" : "0"}}
+          style={{ ...style}}
         >    
           {labelFull} {required && '*'}
         </label>

@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react';
 import { useField } from 'formik';
 import './CustomSelect.css';
-
 export interface CustomSelectProps {
   label: string;
   name?: string; // Formik
@@ -152,6 +151,7 @@ const CustomSelectStandalone: React.FC<CustomSelectProps> = ({
   required = false, theme = 'light', multiple = false,
   captionPosition = 'top', id, enabled = true, visible = true
 }) => {
+  console.log('en CustomSelectStandalone name,style',name,style)
   const isNumeric = useIsNumeric(options);
   if (!visible) return null;
 
