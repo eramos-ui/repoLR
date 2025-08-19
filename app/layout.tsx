@@ -3,7 +3,7 @@
 "use client";  
 
 // Importar polyfills para evitar errores con módulos de Node.js
-import '../lib/polyfills';
+// import '../lib/polyfills';
 
 import { useEffect } from 'react';
 import { SessionProvider } from 'next-auth/react';
