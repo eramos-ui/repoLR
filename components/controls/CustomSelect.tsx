@@ -151,7 +151,7 @@ const CustomSelectStandalone: React.FC<CustomSelectProps> = ({
   required = false, theme = 'light', multiple = false,
   captionPosition = 'top', id, enabled = true, visible = true
 }) => {
-  console.log('en CustomSelectStandalone name,style',name,style)
+  // console.log('en CustomSelectStandalone name,style',name,style)
   const isNumeric = useIsNumeric(options);
   if (!visible) return null;
 

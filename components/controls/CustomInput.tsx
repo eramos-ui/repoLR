@@ -128,7 +128,7 @@ export const CustomInput = ({
     const [ formattedValue, setFormattedValue ] = useState<string>(value ? value.toString() : "");
     const [ valueInside, setValueInside ]       = useState<any>( value ? value.toString() : "");
     const [ rutError, setRutError ]             = useState<string | null>(null);
-    console.log('CustomInput field,style ',field,style);
+    // console.log('CustomInput field,style ',field,style);
     const inputClassNames = ` 
     custom-input-field ${theme}
     ${leftIcon ? 'has-left-icon' : ''} 

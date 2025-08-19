@@ -31,10 +31,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     //Evita problemas de accesibilidad (aria-hidden) en otros elementos de la página.
     //Corrige problemas con el manejo de focus cuando se abre el modal.
     //Asegura que el modal sea accesible para lectores de pantalla.
+    document.documentElement.setAttribute('translate', 'no');//paraevitar caida en Chrome
+    document.documentElement.classList.add('notranslate');//paraevitar caida en Chrome
     Modal.setAppElement('body');//evita problemas con el document en SSR (Server-Side Rendering)
   }, []);
   return (
-    <html lang="en">
+    // <html lang="en"> la líniea que sigue impone español y no permite traducción para que Chrome no se caiga
+    <html lang="es" translate="no" className="notranslate">
        <body>
         <ThemeProvider>
           { isCotizarPage ? children : (// si es cotizar, no se renderiza el layout
