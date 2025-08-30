@@ -78,10 +78,6 @@
   background-color: rgba(50, 50, 50, 0.6);
   color: rgba(221, 220, 220, 0.8);
 }
-/* .custom-button .button-icon {
-  display: flex;
-  align-items: center;
-} */
 
 .custom-button .button-icon.left {
   margin-right: 0.5rem;

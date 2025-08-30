@@ -8,7 +8,12 @@ import { getUsersVigentes } from '@/app/services/users/getUsersVigentes';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     await connectDB();
-    const users = await getUsersVigentes();
-    // console.log('en api forms/loadGrid/getUsuariosVigentes',users);
-    res.status(200).json(users);
+    try{
+        const users = await getUsersVigentes();
+        console.log('en api forms/loadGrid/getUsuariosVigentes',users.length);
+        res.status(200).json(users);
+    }catch (err){
+        console.log('en api forms/loadGrid/getUsuariosVigentes:',err)
+        res.status(500).json({ error: 'Error al obtener usuarios vigentes' });
+    }
 }

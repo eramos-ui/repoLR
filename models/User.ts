@@ -28,7 +28,9 @@ const userSchema = new Schema({
     },
     email: {
         type: String,
-        required: true
+        required: true,
+        lowercase: true,// o set: (v: string) => v.trim().toLowerCase(),
+        trim:true,
     },
     avatar: {
         type: String,

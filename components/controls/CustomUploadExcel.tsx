@@ -67,46 +67,46 @@ export const CustomUploadExcel: React.FC<CombinedProps> = ({
         }
       }
   };
-  const handleUpload = async (event: React.FormEvent) => {
-    event.preventDefault();
-    if (!file) {
-      setMessage("Por favor, selecciona un archivo.");
-      setMessageType("error");
-      return;
-    }
-    const formData = new FormData();
-    formData.append("file", file);
+  // const handleUpload = async (event: React.FormEvent) => {
+  //   event.preventDefault();
+  //   if (!file) {
+  //     setMessage("Por favor, selecciona un archivo.");
+  //     setMessageType("error");
+  //     return;
+  //   }
+  //   const formData = new FormData();
+  //   formData.append("file", file);
   
-    try {
-      setLoading(true);
-      const res = await fetch(endpoint, {
-        method: "POST",
-        body: formData,
-      });
-      let result;
-      try {
-        result = await res.json(); // Intenta convertir la respuesta a JSON
-      } catch (jsonError) {
-        throw new Error("Error al procesar la respuesta del servidor. No es un JSON válido.");
-      }
+  //   try {
+  //     setLoading(true);
+  //     const res = await fetch(endpoint, {
+  //       method: "POST",
+  //       body: formData,
+  //     });
+  //     let result;
+  //     try {
+  //       result = await res.json(); // Intenta convertir la respuesta a JSON
+  //     } catch (jsonError) {
+  //       throw new Error("Error al procesar la respuesta del servidor. No es un JSON válido.");
+  //     }
   
-      if (!res.ok) {
-        const errorMessage = result?.message || "Error desconocido en el servidor.";
-        setMessageType("error");
-        throw new Error(errorMessage);
-      }
-      setMessage("Archivo subido exitosamente.");
-      setMessageType("success"); 
-      onUploadSuccess?.(result.data);
-    } catch (error) {
-      console.error("Error al subir el archivo:", error);
-      setMessage(`Error: ${error instanceof Error ? error.message : "Error inesperado."}`);
-      setMessageType("error");
-      onUploadError?.(error instanceof Error ? error.message : "Error inesperado.");
-    } finally {
-      setLoading(false);
-    }
-  };  
+  //     if (!res.ok) {
+  //       const errorMessage = result?.message || "Error desconocido en el servidor.";
+  //       setMessageType("error");
+  //       throw new Error(errorMessage);
+  //     }
+  //     setMessage("Archivo subido exitosamente.");
+  //     setMessageType("success"); 
+  //     onUploadSuccess?.(result.data);
+  //   } catch (error) {
+  //     console.error("Error al subir el archivo:", error);
+  //     setMessage(`Error: ${error instanceof Error ? error.message : "Error inesperado."}`);
+  //     setMessageType("error");
+  //     onUploadError?.(error instanceof Error ? error.message : "Error inesperado.");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };  
   return (
     <div className={`custom-input-container ${captionPosition}`}>
       {/* 📌 Etiqueta para el Input */}
@@ -118,13 +118,6 @@ export const CustomUploadExcel: React.FC<CombinedProps> = ({
            //className="border border-gray-300 rounded p-2" 
            className={`file-input ${className}`}
         />
-        {/* 📌 Botón de Subida (opcional) */}
-        {/* {(showUploadButton && file ) &&  ( 
-          <button type={useStandaloneForm ? "submit" : "button"} onClick={onUploadClick || handleUpload}
-            disabled={loading} className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-700 transition">
-            {loading ? "Subiendo..." : uploadButtonLabel}
-          </button>
-        )} */}
       </div>
       {/* 📌 Mensaje de respuesta */}
       {message && (

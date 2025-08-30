@@ -86,7 +86,7 @@ export const EditForm: React.FC<EditFormProps> = ({
   ...props
 }) => {
   const formRef = useRef<HTMLFormElement | null>(null);
-  //console.log('en EditForm fields, formConfig',fields,formConfig);
+  console.log('en EditForm fields, formConfig',fields,formConfig);
   // console.log('en EditForm  row', row);
  
   // const rowInitial = buildInitialValues(fields, row);
@@ -140,7 +140,7 @@ export const EditForm: React.FC<EditFormProps> = ({
         fields.map(async (field) => {//fields son los campos del formulario
           if ((field.type === 'selectNumber' || field.type ==='select' || field.type ==='multiselect') && field.apiOptions) {//los que tiene select o multiselect y apiOptions
             try {
-                const res = await fetch(`/api/${field.apiOptions}`);
+              const res = await fetch(`/api/${field.apiOptions}`);
               const data = await res.json(); 
               let options:Option[]=[];
               if (data && data.length>0){
@@ -171,7 +171,7 @@ export const EditForm: React.FC<EditFormProps> = ({
 
   //grabar
   const grabar = async( values:any) =>{//amvos nuevo usuario y edit usuairo
-    console.log('values al graba en EditForm',values,requirePassword);
+    // console.log('values al graba en EditForm',values); 
     if (!session) return //debe estar definido el usuario
     // console.log('fields, values, session',fields, values, session)
     const filesFields=findFilePaths(values);//tiene todos los fields que son File
@@ -289,7 +289,7 @@ export const EditForm: React.FC<EditFormProps> = ({
       <CustomModal
         isOpen={isOpen}
         onClose={onClose}
-        width={width} height={height}
+        width={width} height={height} //OJO revisar
         title={isAdding ? `Agregar Información: ${formTitle}` : `Modificar Información: ${formTitle}`}
         position={'center'}
        >

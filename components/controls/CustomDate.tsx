@@ -37,15 +37,6 @@ const locale = localeMapping[localeEnv];
 /**
  * 📌 Función que intenta parsear la fecha en ambos formatos: `dd/MM/yyyy` y `dd-MM-yyyy`
  */
-// const parseFlexibleDate = (value: string): Date | null => {
-//   if (!value || typeof value !== "string") return null;
-//   const cleaned = value.trim();
-//   for (const fmt of ['dd/MM/yyyy', 'dd-MM-yyyy', 'yyyy-MM-dd']) {
-//     const parsed = parseDate(cleaned, fmt, new Date());
-//     if (!isNaN(parsed.getTime())) return parsed;
-//   }
-//   return null;
-// };
 const parseFlexibleDate = (value: string | Date | null | undefined): Date | null => {
   if (!value) return null;
   if (value instanceof Date) return isNaN(value.getTime()) ? null : value;
@@ -98,41 +89,26 @@ const CustomDateWithFormik: React.FC<Required<Props>> = ({
       <label
         htmlFor={props.id || name}
         style={{ marginBottom: captionPosition === "top" ? "0.5rem" : "0" }}
-        // className={`custom-input-container ${theme} ${captionPosition} font-normal`}
         className={`custom-input-label ${captionPosition} `}
-      >
+   >
         {label} {required && '*'}
       </label>
-      {/* <DatePicker
+      <DatePicker
         selected={selectedDate}
         onChange={handleChange}
-        dateFormat="dd-MM-yyyy"
-        id={props.id || name}
-        locale={locale}
-        disabled={disabled}
-        className={`w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 
-          focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-700 ${className}`}
-        placeholderText={props.placeholder}
-        autoComplete="off"
-        showMonthDropdown
-        showYearDropdown
-        dropdownMode="select"
-      /> */}
-       <DatePicker
-        selected={selectedDate}
-        onChange={handleChange}
-        dateFormat={withTime ? 'dd-MM-yyyy HH:mm' : 'dd-MM-yyyy'}
+        dateFormat={withTime ? `${format} HH:mm` : `${format}`}
         id={props.id || name}
         locale={locale}
         disabled={disabled}
         className={`custom-input-field ${theme}`}
-        // className={`w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 
-        //   focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-700 ${className}`}
         placeholderText={props.placeholder}
         autoComplete="off"
         showMonthDropdown
         showYearDropdown
         dropdownMode="select"
+        popperPlacement="bottom-start" /* 👇 controla la posición del calendario */
+        popperProps={{ strategy: 'fixed' }}/* 👇 evita que se corte dentro de contenedores con overflow / transform */
+        popperClassName="datepop"
         {...(withTime ? {
           showTimeSelect: true,
           timeFormat: 'HH:mm',
@@ -174,25 +150,10 @@ const CustomDateStandalone: React.FC<Props> = ({
       >
         {label} {required && '*'}
       </label>
-      {/* <DatePicker
-        selected={selectedDate}
-        onChange={handleChange}
-        dateFormat="dd-MM-yyyy"
-        id={props.id || name}
-        locale={locale}
-        disabled={disabled}
-        className={`w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 
-          focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-700 ${className}`}
-        placeholderText={props.placeholder}
-        autoComplete="off"
-        showMonthDropdown
-        showYearDropdown
-        dropdownMode="select"
-      /> */}
       <DatePicker
         selected={selectedDate}
         onChange={handleChange}
-        dateFormat={withTime ? 'dd-MM-yyyy HH:mm' : 'dd-MM-yyyy'}
+        dateFormat={withTime ? `${format} HH:mm` : `${format}`}
         id={props.id || name}
         locale={locale}
         disabled={disabled}
@@ -203,6 +164,9 @@ const CustomDateStandalone: React.FC<Props> = ({
         showMonthDropdown
         showYearDropdown
         dropdownMode="select"
+        popperPlacement="bottom-start"
+        popperProps={{ strategy: 'fixed' }}
+        popperClassName="datepop"
         {...(withTime ? {
           showTimeSelect: true,
           timeFormat: 'HH:mm',

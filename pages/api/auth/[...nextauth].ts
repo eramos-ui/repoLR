@@ -29,9 +29,9 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials) {
         // console.log('🔒 En auth/[...nextauth]-authorize credentials(1):', !credentials);
         if (!credentials) return null;
-        console.log('🔒 En auth/[...nextauth]-authorize credentials:', credentials.email);
-        console.log('**credentials.email antes de getUserVigenteByEmail:', credentials.email);
-        const user=await getUserVigenteByEmail(credentials.email);
+        console.log('🔒 En auth/[...nextauth]-authorize credentials:', credentials.email.toLowerCase());
+        console.log('**credentials.email antes de getUserVigenteByEmail:', credentials.email.toLowerCase());
+        const user=await getUserVigenteByEmail(credentials.email.toLowerCase());
 
         if (!user) return null;
         // console.log('🔒 En auth/[...nextauth]-getUserVigente user:', user);      

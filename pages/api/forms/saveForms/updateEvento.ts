@@ -18,7 +18,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ message: 'Método no permitido' });
   }
 
-  const {    row, idUserModification,action } = JSON.parse(req.body);
+  const {    row, idUserModification,action } =  JSON.parse(JSON.stringify(req.body));
 
      console.log('en updateEvento row, idUserModification,action',row, idUserModification,action);
     //  return res.status(500).json({ message: 'Evento NO creado'});  

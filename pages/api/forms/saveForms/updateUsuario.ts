@@ -17,20 +17,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ message: 'Método no permitido' });
   }
 
-  const { action,idUserModification, row, password } = JSON.parse(req.body);//sólo vienen estos 4 datos
+  const { action,idUserModification, row, password } = JSON.parse(JSON.stringify(req.body));//sólo vienen estos 4 datos
     console.log('en updateUsuario req.body',  action,idUserModification, row);
-    // return res.status(500).json({ message: 'probando update usuario' });
-   if (action ==='delete') {//Marca usurio como No vigente
-      const id=row._id;
-      const user = await User.findById(id);
-      if (!user) {
-        return res.status(404).json({ message: 'Usuario no encontrado' });
-      }
-      user.valid="no Vigente"
-      await user.save();
-      return res.status(200).json({ message: 'Usuario se actualiza como "No vigente"' });
-   }
-
+  // return res.status(500).json({ message: 'probando update usuario' });
+  //  if (action ==='delete') {//Marca usurio como No vigente
+  //     const id=row._id;
+  //     const user = await User.findById(id);
+  //     if (!user) {
+  //       return res.status(404).json({ message: 'Usuario no encontrado' });
+  //     }
+  //     user.valid="no Vigente"
+  //     await user.save();
+  //     return res.status(200).json({ message: 'Usuario se actualiza como "No vigente"' });
+  //  }
+    let email=row.email as string;
+    email=email.toLowerCase();
     const roles=await Rol.find();
     const rol=roles.find(r => Number(r.value) === Number(row.roleId));
     const role=rol?.label;//para grabar también role que es el label del rol
@@ -40,11 +41,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const id=(row._id)?row._id: null;
     
-    console.log('id',id)
+    // console.log('id',id)
     if (!id || id === null){
       // console.log('newUser') ;
       // console.log('verifica email no repetido', row.email)
-      const userSameEmail = await getUserVigenteByEmail(row.email as string);
+      const userSameEmail = await getUserVigenteByEmail(email);
       try {
         if (userSameEmail) {
           // console.log('usuario repetido')
@@ -64,7 +65,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       // 🆕 INSERT: un nuevo usuario
       const newUser = new User({
         name:row.name,
-        email:row.email,
+        email:email,
         userModification:idUserModification,
         aditionalData:row.aditionalData,
         phone:row.phone,
@@ -83,6 +84,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         idUser,
       });
         try{
+          console.log('new user',newUser)
           await newUser.save();
           return res.status(201).json({ message: 'Usuario actualizado', user: newUser.name });         
         }catch(error){
@@ -95,7 +97,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         // 🔁 UPDATE parcial
         const actualizaUser= new User({
           name:row.name,
-          email:row.email,
+          email:email,
           userModification:idUserModification,
           aditionalData:row.aditionalData,
           phone:row.phone,
@@ -109,7 +111,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           roleswkf: [],
           idUser:user.idUser,
         });
-        // console.log('actualizaUser',actualizaUser)
+        console.log('actualizaUser',actualizaUser)
         try{
           await actualizaUser.save();
           return res.status(201).json({ message: 'Usuario actualizado', user: actualizaUser.name });      

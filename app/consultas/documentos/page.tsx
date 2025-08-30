@@ -84,14 +84,23 @@ const ConsultaRepositorioPage = () => {
     <h1 className="text-3xl font-bold">Consulta documentos en el repositorio</h1>
     <div className="mb-1 flex items-start space-x-3">
        { 
-        temaOptions &&   
-        <div className="w-1/5" >
+        temaOptions &&  
+        <>
+        <div className="w-2/5" >
           <CustomSelect  width='300px' theme="light"  label='Temas' captionPosition='top'
               onChange={(v) =>{ handleChange(v as number)}} value={temaSelected}
               options={temaOptions || []}
               placeholder="Seleccione tema"
           />
         </div>
+        <div className="w-1/5" >
+                <CustomButton
+                      buttonStyle="primary" size="small" htmlType="button" label="Volver a página principal" style={{ marginLeft:3, marginTop:15 }}
+                      icon={<FontAwesomeIcon icon={faHome} size="lg" color="white" />} onClick={() =>  router.push('/') } 
+                > 
+               </CustomButton>
+        </div>   
+ </>        
        }    
       </div>
       {(rows && rows.length>0) ? (
@@ -105,11 +114,7 @@ const ConsultaRepositorioPage = () => {
         ( (temaSelected) &&
         <div>Ningún documento encontrado</div>
         )}
-        <CustomButton
-            buttonStyle="primary" size="small" htmlType="button" label="Volver a página inicial" style={{ marginLeft:3, marginTop:15 }}
-            icon={<FontAwesomeIcon icon={faHome} size="lg" color="white" />} onClick={() =>  router.push('/') } 
-        > 
-        </CustomButton>
+ 
   </div>
  );
 }

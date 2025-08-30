@@ -27,20 +27,21 @@ export const ExportConfig: React.FC<ExportConfigProps> = ({
   return (
     <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
       <CustomInput
-        label=''
+        label='Archivo para exportar'
         type="text"
         value={fileName}
         onChange={(e) => setFileName(e.target.value)}
         placeholder="Nombre del archivo excel"
+        captionPosition="left"
         tooltipContent={'Nombre sin extensión, con el que se guardará el archivo en Descargas'}
         tooltipPosition = "bottom"
         width='200px'
         style={{
-          padding: "0.5rem",
-          border: "1px solid #ccc",
-          borderRadius: "4px",
+          padding: "0.6rem",
+          // border: "1px solid #ccc",
+          // borderRadius: "4px",
           fontSize: "14px",
-          height: '2.00rem',
+          height: '2.01rem',
         }}
       />
       <CustomButton
